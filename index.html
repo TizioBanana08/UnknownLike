@@ -19,16 +19,25 @@
                 <div class="entity" id="enemy-card">
                     <h2 id="e-name">Mostro</h2>
                     <div class="sprite" id="e-sprite">👾</div>
-                    <p>HP: <span id="e-hp">80</span></p>
-                    <p>Potenza: <span id="e-atk">10</span></p>
+                    <p><span style="font-weight: bold;">HP:</span> <span id="e-hp">80</span></p>
+                    <p><span style="font-weight: bold;">Potenza:</span> <span id="e-atk">10</span></p>
                     <div class="health-bar-container">
                         <div id="e-health-bar" class="health-bar"></div>
                     </div>
                 </div>
             </div>
-            <div class="actions">
-                <button onclick="attaccoGiocatore()">Attacca con l'arma!</button>
-                <ul id="battle-log"></ul>
+            <div id="bottom-bar">
+                <div class="log-container">
+                    <div id="title-log">
+                        <h1>Battle Log</h1>
+                    </div>
+                    <ul id="battle-log"></ul>
+                </div>
+                <div class="inventory-container"></div>
+                <div class="actions-container">
+                    <button onclick="attaccoGiocatore()">Attacca con l'arma!</button>
+                </div>
+                
             </div>
             
         </div>
