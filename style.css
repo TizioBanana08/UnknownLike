@@ -21,4 +21,19 @@ li { background: #eee; margin-bottom: 5px; padding: 10px; display: flex; justify
 .entity { border: 5px solid #ad7a59; padding: 30px; text-align: center; width: 200px; height: 300px; background: #e6cda4; border-radius: 5%; }
 .sprite { font-size: 100px; margin: 10px 0; }
 .vs { font-weight: bold; font-size: 200px; color: red; border-color: black;}
-#battle-log { list-style: none; height: 100px; overflow-y: auto; background: #222; padding: 10px; border: 1px solid #555; }
+#battle-log { list-style: none; height: 100px; overflow-y: auto; background: #ad7a59; padding: 10px; border: 1px solid #555; }
+.health-bar-container{
+    width: 200px;
+    height: 20px;
+    background-color: #444;
+    border: 2px solid #222;
+    overflow: hidden; /* Importante: taglia ciò che esce */
+    display: block;   /* Evita interferenze di flexbox */
+}
+.health-bar {
+    width: 100%;      /* Parte da piena */
+    height: 100%;
+    background-color: #01ad23;
+    transition: width 0.4s ease, background-color 0.4s ease; /* Animazione fluida */
+    transform-origin: left; /* Forza l'accorciamento verso sinistra */
+}

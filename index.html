@@ -9,8 +9,11 @@
                 <div class="entity" id="player-card">
                     <h2 id="p-name">Eroe</h2>
                     <img id="p-sprite-img" src="" width=200>
-                    <p>HP: <span id="p-hp">100</span></p>
-                    <p>Arma: <span id="p-weapon">Spada</span></p>
+                    <p><span style="font-weight: bold;">Arma:</span> <span id="p-weapon">Spada</span></p>
+                    <p><span style="font-weight: bold;">HP:</span> <span id="p-hp">100</span></p>
+                    <div class="health-bar-container">
+                        <div id="p-health-bar" class="health-bar"></div>
+                    </div>
                 </div>
                 <div class="vs">VS</div>
                 <div class="entity" id="enemy-card">
@@ -18,6 +21,9 @@
                     <div class="sprite" id="e-sprite">👾</div>
                     <p>HP: <span id="e-hp">80</span></p>
                     <p>Potenza: <span id="e-atk">10</span></p>
+                    <div class="health-bar-container">
+                        <div id="e-health-bar" class="health-bar"></div>
+                    </div>
                 </div>
             </div>
             <div class="actions">
