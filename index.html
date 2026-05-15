@@ -8,7 +8,7 @@
             <div class="battle-area">
                 <div class="entity" id="player-card">
                     <h2 id="p-name">Eroe</h2>
-                    <img id="p-sprite-img" src="" width=100>
+                    <img id="p-sprite-img" src="" width=200>
                     <p>HP: <span id="p-hp">100</span></p>
                     <p>Arma: <span id="p-weapon">Spada</span></p>
                 </div>
@@ -19,10 +19,12 @@
                     <p>HP: <span id="e-hp">80</span></p>
                     <p>Potenza: <span id="e-atk">10</span></p>
                 </div>
-                <div class="actions">
-                    <button onclick="attaccoGiocatore()">Attacca con l'arma!</button>
-                </div>
+            </div>
+            <div class="actions">
+                <button onclick="attaccoGiocatore()">Attacca con l'arma!</button>
                 <ul id="battle-log"></ul>
+            </div>
+            
         </div>
         <script src="renderer.js"></script>
     </body>
