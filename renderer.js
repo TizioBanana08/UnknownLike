@@ -30,8 +30,8 @@ const arco={
     atk:5,
     //abilità passiva multishot: spara un numero compreso tra 1 e 4 frecce ad attacco
     abilità_passiva(){
-        max:4;
-        min:1;
+        max=4;
+        min=1;
         function generaRandom(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
@@ -45,8 +45,8 @@ const ascia={
     atk:15,
     //abilità passiva crit chance: ogni attacco ha una possibiltà dwl 20% di infliggere il doppio del danno
     abilità_passiva(){
-        max:100;
-        min:1;
+        max=100;
+        min=1;
         function generaRandom(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
@@ -74,8 +74,8 @@ const lancia={
     atk:15,
     //abilità passiva doppio affondo: ogni attacco ha una possibilità del 20% di fare un secondo attacco al nemico che infligge 5 danni in più 
     abilità_passiva(){
-        max:100;
-        min:1;
+        max=100;
+        min=1;
         function generaRandom(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
