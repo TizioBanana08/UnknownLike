@@ -89,8 +89,12 @@ const lancia={
     }
 }
 
-
-
+//Armatura base
+//a differenza delle armi le armature avranno passive diverse senza abilità attive
+const armaturaMaglia={
+    difesa:5,
+    //l'armatura base non aggiunge nessuna abilità passiva
+}
 
 
 function aggiornaUI(){
