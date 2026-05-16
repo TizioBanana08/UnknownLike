@@ -83,7 +83,6 @@ function attaccoGiocatore(){
     else{
         nemico.hp=0;
         aggiungiLog("Il nemico e' stato sconfitto!")
-
         aggiornaUI();
     }
 }
