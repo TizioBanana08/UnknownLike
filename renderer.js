@@ -40,6 +40,57 @@ const arco={
     },
 }
 
+//Oggetto ascia base
+const ascia={
+    atk:15,
+    //abilità passiva crit chance: ogni attacco ha una possibiltà dwl 20% di infliggere il doppio del danno
+    abilità_passiva(){
+        max:100;
+        min:1;
+        function generaRandom(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        chance = generaRandom(min, max);
+        if(chance<=20){
+            return danno_aggiuntivo=this.atk*2;
+        }
+        else{
+            return this.atk;
+        }
+    }
+}
+
+//Oggetto tirapugni base
+const tirapugni={
+    atk:10,
+    //abilità passiva doppio colpo: ogni attacco colpisci due volte
+    abilità_passiva(){
+        return this.atk*2;
+    }
+}
+
+//Oggetto lancia base
+const lancia={
+    atk:15,
+    //abilità passiva doppio affondo: ogni attacco ha una possibilità del 20% di fare un secondo attacco al nemico che infligge 5 danni in più 
+    abilità_passiva(){
+        max:100;
+        min:1;
+        function generaRandom(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        chance = generaRandom(min, max);
+        if(chance<=20){
+            return danno_aggiuntivo=this.atk+5;
+        }
+        else{
+            return this.atk;
+        }
+    }
+}
+
+
+
 
 
 function aggiornaUI(){
