@@ -14,6 +14,34 @@ const nemico = {
     attacco: 10,
     sprite: "💧"
 };
+//Armi base
+//Ogni arma base ha solo abilità passiva condivisa da tutte le armi di quel tipo, le armi normali avranno anche abilità attiva
+//Oggetto spada base
+const spada={
+    atk=15,
+    //abilità passiva bleed:ogni attacco aggiungerà 1 di danno 
+    abilità_passiva(){
+        return danno_aggiuntivo=1;
+    },
+}
+
+//Oggetto arco base
+const arco={
+    atk=5,
+    //abilità passiva multishot: spara un numero compreso tra 1 e 4 frecce ad attacco
+    abilità_passiva(){
+        const max = 4;
+        const min = 1;
+        function generaRandom(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        numeroFreccie = generaRandom(min, max);
+        return numeroFreccie*this.atk;
+    },
+}
+
+
+
 function aggiornaUI(){
     let percentualeVitaP = (giocatore.hp / giocatore.maxHp) * 100;
     let percentualeVitaE = (nemico.hp / nemico.maxHp) * 100;
