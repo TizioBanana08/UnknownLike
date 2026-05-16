@@ -19,6 +19,7 @@ const nemico = {
 //Oggetto spada base
 const spada={
     atk:15,
+    sprite:"assets/sword.png",
     //abilità passiva bleed:ogni attacco aggiungerà 1 di danno 
     abilità_passiva(){
         return danno_aggiuntivo=1;
@@ -28,6 +29,7 @@ const spada={
 //Oggetto arco base
 const arco={
     atk:5,
+    sprite:"assets/bow.png",
     //abilità passiva multishot: spara un numero compreso tra 1 e 4 frecce ad attacco
     abilità_passiva(){
         max=4;
@@ -43,6 +45,7 @@ const arco={
 //Oggetto ascia base
 const ascia={
     atk:15,
+    sprite:"assets/axe.png",
     //abilità passiva crit chance: ogni attacco ha una possibiltà dwl 20% di infliggere il doppio del danno
     abilità_passiva(){
         max=100;
@@ -63,6 +66,7 @@ const ascia={
 //Oggetto tirapugni base
 const tirapugni={
     atk:10,
+    sprite:"assets/brass_knuckles.png",
     //abilità passiva doppio colpo: ogni attacco colpisci due volte
     abilità_passiva(){
         return this.atk*2;
@@ -72,6 +76,7 @@ const tirapugni={
 //Oggetto lancia base
 const lancia={
     atk:15,
+    sprite:"assets/spear.png",
     //abilità passiva doppio affondo: ogni attacco ha una possibilità del 20% di fare un secondo attacco al nemico che infligge 5 danni in più 
     abilità_passiva(){
         max=100;
@@ -93,6 +98,7 @@ const lancia={
 //a differenza delle armi le armature avranno passive diverse senza abilità attive
 const armaturaMaglia={
     difesa:5,
+    sprite:"assets/chainmail.png",
     //l'armatura base non aggiunge nessuna abilità passiva
 }
 
