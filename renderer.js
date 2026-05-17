@@ -28,6 +28,8 @@ function aggiornaUI(){
     let percentualeVitaE = (nemico.hp / nemico.maxHp) * 100;
     document.getElementById("p-sprite-img").src=giocatore.sprite;
     document.getElementById("e-sprite-img").src=nemico.sprite;
+    document.getElementById("weapon-sprite-img").src=giocatore.arma.sprite;
+    document.getElementById("armor-sprite-img").src=giocatore.armatura.sprite;
     document.getElementById("p-hp").innerText=giocatore.hp;
     document.getElementById("e-hp").innerText=nemico.hp;
     document.getElementById("p-name").innerText=giocatore.nome;

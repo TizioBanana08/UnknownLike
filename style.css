@@ -178,3 +178,34 @@ li{
     font-size: 1.1rem;
     font-weight: bold;
 }
+.item-container {
+    font-weight: bold;
+    display: flex;
+    flex-direction: column; /* Mette il testo sopra l'immagine */
+    align-items: center;    /* Centra tutto */
+    padding: 5px;
+    border-radius: 10px;
+    margin: 5px;
+}
+
+.item-container img {
+    width: 80px;
+    height: 80px;
+    padding: 5px;
+    background: #3e2723; /* Colore legno scuro per lo slot */
+    border: 4px inset #5d4037; /* Effetto "scavato" nel legno */
+    border-radius: 5px;
+    image-rendering: pixelated; /* Se usi pixel art, le rende nitide */
+    transition: transform 0.2s; /* Per l'effetto hover */
+}
+.item-container img:hover {
+    transform: scale(1.1);
+    border-color: #d4af37; /* Diventa color oro al passaggio */
+    cursor: pointer;
+}
+.item-container p{
+    margin-top: 5px;
+}
+#weapon-sprite-img {
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); /* Un leggero bagliore dorato */
+}
