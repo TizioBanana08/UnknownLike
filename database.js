@@ -1,5 +1,7 @@
 const database={
+    //Ogni arma base ha solo abilità passiva condivisa da tutte le armi di quel tipo, le armi normali avranno anche abilità attiva
     armi:{
+        //Oggetto spada base
         spada:{
             atk:15,
             sprite:"assets/sword.png",
@@ -8,6 +10,7 @@ const database={
                 return danno_aggiuntivo=1;
             },
         },
+        //Oggetto arco base
         arco:{
             atk:5,
             sprite:"assets/bow.png",
@@ -22,6 +25,7 @@ const database={
                 return numeroFreccie*this.atk;
             },
         },
+        //Oggetto ascia base
         ascia:{
             atk:15,
             sprite:"assets/axe.png",
@@ -41,6 +45,7 @@ const database={
                 }
             }
         },
+        //Oggetto tirapugni base
         tirapugni:{
             atk:10,
             sprite:"assets/brass_knuckles.png",
@@ -49,6 +54,7 @@ const database={
                 return this.atk*2;
             }
         },
+        //Oggetto lancia base
         lancia:{
             atk:15,
             sprite:"assets/spear.png",
@@ -78,8 +84,27 @@ const database={
         },
     },
     nemici:{
-        slime: { nome: "Slime", hp: 40, attacco: 5, sprite: "assets/slime.png" },
-        goblin: { nome: "Goblin", hp: 80, attacco: 12, sprite: "assets/goblin.png" }
+        slime: { 
+            nome: "Slime", 
+            hp: 40, 
+            maxHp:40, 
+            attacco: 5, 
+            sprite: "assets/slime.png" 
+        },
+        goblin: { 
+            nome: "Goblin", 
+            hp: 80, 
+            maxHp:80, 
+            attacco: 12, 
+            sprite: "assets/goblin.png" 
+        },
+        scheletro: { 
+            nome: "Guerriero Osseo", 
+            hp: 100, 
+            maxHp:100,
+            attacco: 12, 
+            sprite: "assets/skeleton.png",
+        },
     },
     personaggi:{
         cavaliere:{
