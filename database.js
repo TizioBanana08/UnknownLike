@@ -69,6 +69,7 @@ const database={
     //a differenza delle armi le armature avranno passive diverse senza abilità attive
     armature:{
         armaturaMaglia:{
+            nome:"armaturaMaglia",
             difesa:5,
             sprite:"assets/chainmail.png",
             //l'armatura base non aggiunge nessuna abilità passiva
@@ -102,7 +103,8 @@ const database={
             nome:"Cavalier Pristol",
             hp: 100,
             maxHp: 100,
-            arma: "tirapugni",
+            arma: "lancia",
+            armatura:"armaturaMaglia",
             sprite: "assets/base_knight.png"
         },
     },

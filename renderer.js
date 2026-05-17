@@ -10,6 +10,11 @@ const giocatore=db.personaggi.cavaliere;
 if (typeof giocatore.arma === 'string') {
     giocatore.arma = db.armi[giocatore.arma];
 }
+if (typeof giocatore.armatura === 'string') {
+    giocatore.armatura = db.armature[giocatore.armatura];
+    giocatore.maxHp=giocatore.maxHp+giocatore.armatura.difesa;
+    giocatore.hp=giocatore.hp+giocatore.armatura.difesa;
+}
 //Oggeto nemico
 function generaNemico(){
     const chiaviNemici=Object.keys(db.nemici);
