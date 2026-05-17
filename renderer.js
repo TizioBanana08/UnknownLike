@@ -1,3 +1,4 @@
+const db = require('./database.js');
 let gameState = {
     fase: "TURNO_GIOCATORE", // Può essere: TURNO_GIOCATORE, TURNO_NEMICO, VITTORIA, GAME_OVER
     animazioneInCorso: false
@@ -28,7 +29,7 @@ const spada={
     abilità_passiva(){
         return danno_aggiuntivo=1;
     },
-}
+};
 
 //Oggetto arco base
 const arco={
