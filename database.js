@@ -10,6 +10,7 @@ const database={
             abilita_passiva(){
                 return danno_aggiuntivo=1;
             },
+            descrizione: "La più fidata arma per un cavaliere, non dimenticarla mai in uno scontro"
         },
         //Oggetto arco base
         arco:{
@@ -22,6 +23,7 @@ const database={
                 const dannoTotale = n * this.atk; // Calcola il totale
                 return dannoTotale; // Restituisce il valore, ma NON cambia this.atk
             },
+            descrizione: "Robin Hood chi? Con questo arco sarai molto meglio... Forse"
         },
         //Oggetto ascia base
         ascia:{
@@ -37,7 +39,8 @@ const database={
                 else{
                     return this.atk;
                 }
-            }
+            },
+            descrizione: "Vai e zappa nemici come i migliori canadesi fanno con gli alberi!",
         },
         //Oggetto tirapugni base
         tirapugni:{
@@ -47,7 +50,8 @@ const database={
             //abilità passiva doppio colpo: ogni attacco colpisci due volte
             abilita_passiva(){
                 return this.atk*2;
-            }
+            },
+            descrizione:"Cazzo mi è rimasto del sangue fra le nocche, mi renderà più forte magari",
         },
         //Oggetto lancia base
         lancia:{
