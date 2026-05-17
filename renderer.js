@@ -54,8 +54,8 @@ function cambiaColoreHealthBar(vitaP,id){
 async function attaccoGiocatore() {
     if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0) return;
     let dannoTurno=0;
-    if (typeof giocatore.arma.abilità_passiva === "function") {
-        dannoTurno = giocatore.arma.abilità_passiva();
+    if (typeof giocatore.arma.abilita_passiva === "function") {
+        dannoTurno = giocatore.arma.abilita_passiva();
     } else {
         dannoTurno = giocatore.arma.atk;
     }
