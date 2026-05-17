@@ -75,7 +75,7 @@ async function attaccoGiocatore() {
         aggiungiLog(`✨ Effetto attivato! Danno totale: ${dannoTurno} HP`);
         aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
     } else {
-        aggiungiLog(`Colpisci il nemico per ${dannoTurno} HP`);
+        aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
     }
 
     if (nemico.hp > 0) {
