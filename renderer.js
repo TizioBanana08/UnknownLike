@@ -1,3 +1,7 @@
+let gameState = {
+    fase: "TURNO_GIOCATORE", // Può essere: TURNO_GIOCATORE, TURNO_NEMICO, VITTORIA, GAME_OVER
+    animazioneInCorso: false
+};
 //Oggetto Player
 const giocatore={
     nome:"Cavalier Pristol",
@@ -139,13 +143,19 @@ function attaccoGiocatore(){
     nemico.hp-=giocatore.arma.danno;
     aggiungiLog(`${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${giocatore.arma.danno} HP!`);
     if(nemico.hp>0){
-        setTimeout(attaccoNemico(),800);
+        gameState="TURNO_NEMICO"
+        turnoNemico();
     }
     else{
         nemico.hp=0;
         aggiungiLog("Il nemico e' stato sconfitto!")
+        gameState="VITTORIA";
         aggiornaUI();
     }
+}
+function turnoNemico(){
+    if(gameState!=="TURNO_NEMICO") return;
+    setTimeout(attaccoNemico(),1500);
 }
 function attaccoNemico() {
     giocatore.hp -= nemico.attacco;
@@ -154,8 +164,13 @@ function attaccoNemico() {
     
     if (giocatore.hp <= 0) {
         giocatore.hp = 0;
-        alert("GAME OVER");
+        gameState="GAME_OVER";
+        aggiungiLog("Sei stato sconfitto! :(")
         location.reload();
+    }
+    else{
+        gameState="TURNO_GIOCATORE"
+        aggiungiLog("E' il tuo turno!")
     }
 }
 function aggiungiLog(messaggio) {
