@@ -209,3 +209,32 @@ li{
 #weapon-sprite-img {
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); /* Un leggero bagliore dorato */
 }
+.description-box {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #f4e4bc; /* Colore pergamena */
+    border: 4px solid #5d4037;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    z-index: 100;
+    width: 300px;
+    text-align: center;
+}
+.hidden {
+    display: none; /* Nasconde il box inizialmente */
+}
+
+#desc-name {
+    margin: 0;
+    color: #5d4037;
+    text-transform: uppercase;
+    border-bottom: 2px solid #5d4037;
+}
+
+#desc-text {
+    font-style: italic;
+    color: #333;
+}

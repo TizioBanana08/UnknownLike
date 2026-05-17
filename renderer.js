@@ -129,6 +129,41 @@ function aggiungiLog(messaggio) {
     log.insertBefore(li, log.firstChild);
     log.scrollBottom = log.scrollHeight;
 }
+const weaponImg = document.getElementById("weapon-sprite-img");
+const armorImg=document.getElementById("armor-sprite-img");
+const descBox = document.getElementById("item-description");
+weaponImg.onclick = () => {
+    const descName = document.getElementById("desc-name");
+    const descText = document.getElementById("desc-text");
+    // Prendiamo l'arma corrente del giocatore
+    const arma = giocatore.arma;
 
+    // Riempiamo il box
+    descName.innerText = arma.nome;
+    
+    descText.innerText=arma.descrizione;
+
+    // Mostriamo il box (se era nascosto, lo mostra; se era visibile, lo nasconde)
+    descBox.classList.toggle("hidden");
+};
+armorImg.onclick=()=>{
+    const descName = document.getElementById("desc-name");
+    const descText = document.getElementById("desc-text");
+    // Prendiamo l'arma corrente del giocatore
+    const armatura = giocatore.armatura;
+
+    // Riempiamo il box
+    descName.innerText = armatura.nome;
+    
+    descText.innerText=armatura.descrizione;
+
+    // Mostriamo il box (se era nascosto, lo mostra; se era visibile, lo nasconde)
+    descBox.classList.toggle("hidden");
+}
+window.onclick = (event) => {
+    if (event.target !== weaponImg && !descBox.contains(event.target)&&event.target !== armorImg) {
+        descBox.classList.add("hidden");
+    }
+};
 // Inizializza l'app
 aggiornaUI();

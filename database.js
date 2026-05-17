@@ -63,15 +63,17 @@ const database={
                 else{
                     return 0;
                 }
-            }
+            },
+            descrizione:"Un'arma dalla lunga gittata, attenzione ai suoi potenti affondi!",
         }
     },
     //a differenza delle armi le armature avranno passive diverse senza abilità attive
     armature:{
         armaturaMaglia:{
-            nome:"armaturaMaglia",
+            nome:"Armatura di maglia",
             difesa:5,
             sprite:"assets/chainmail.png",
+            descrizione:"Una resistente armatura in cotta di maglia, con lei non si sbaglia mai!"
             //l'armatura base non aggiunge nessuna abilità passiva
         },
     },
