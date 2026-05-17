@@ -7,6 +7,9 @@ let gameState = {
 };
 //Oggetto Player
 const giocatore=db.personaggi.cavaliere;
+if (typeof giocatore.arma === 'string') {
+    giocatore.arma = db.armi[giocatore.arma];
+}
 //Oggeto nemico
 function generaNemico(){
     const chiaviNemici=Object.keys(db.nemici);
@@ -49,16 +52,31 @@ function cambiaColoreHealthBar(vitaP,id){
     }
 }
 async function attaccoGiocatore() {
-    // Controllo turno e vita
     if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0) return;
-
-    // 1. Applica danno
-    nemico.hp -= giocatore.arma.danno;
+    let dannoTurno=0;
+    if (typeof giocatore.arma.abilità_passiva === "function") {
+        dannoTurno = giocatore.arma.abilità_passiva();
+    } else {
+        dannoTurno = giocatore.arma.atk;
+    }
+    if(giocatore.arma.nome==="Spada"){
+        dannoTurno=giocatore.arma.atk+1;
+    }
+    if(giocatore.arma.nome==="Lancia"){
+        dannoTurno=giocatore.arma.atk+dannoTurno;
+    }
+    nemico.hp -= dannoTurno;
     if (nemico.hp < 0) nemico.hp = 0;
     
     // 2. Aggiorna UI subito per far vedere la barra che scende
     aggiornaUI();
-    aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${giocatore.arma.danno} HP!`);
+
+    if (dannoTurno > giocatore.arma.atk) {
+        aggiungiLog(`✨ Effetto attivato! Danno totale: ${dannoTurno} HP`);
+        aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
+    } else {
+        aggiungiLog(`Colpisci il nemico per ${dannoTurno} HP`);
+    }
 
     if (nemico.hp > 0) {
         gameState.fase = "TURNO_NEMICO";
