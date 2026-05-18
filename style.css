@@ -21,8 +21,9 @@ h1 {
 
 button {
     padding: 10px;
-    background: red;
-    color: white;
+    background: #e6cda4;
+    color: #5d4037;
+    font-weight: bold;
     border: none;
     cursor: pointer;
 }
@@ -73,9 +74,10 @@ li{
 }
 
 .vs {
-    font-weight: bold;
-    font-size: 120px;
-    color: red;
+    font-size: 15rem;
+    color: #d4af37;
+    text-shadow: 5px 10px #000;
+    margin-bottom: 50px;
 }
 
 .health-bar-container {
@@ -178,8 +180,18 @@ li{
 .actions-container button {
     width: 100%;
     height: 100%;
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     font-weight: bold;
+    
+    color:white;
+    
+}
+#atk-button{
+    background-color: red;
+}
+#heal-button{
+    margin-top: 10px;
+    background-color: green;
 }
 .inventory-container {
     flex: 1;
@@ -319,4 +331,55 @@ li{
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
+}
+#main-menu {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background-image: url('assets/base_background.png'); /* Uno sfondo figo */
+    background-size: cover;
+    z-index: 10000; /* Più alto di tutto, anche del Game Over */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-title {
+    font-size: 5rem;
+    color: #d4af37;
+    text-shadow: 5px 5px #000;
+    margin-bottom: 50px;
+}
+.menu-options {
+    display: flex;
+    flex-direction: column; /* Li mette in colonna */
+    gap: 20px;              /* Spazio tra un bottone e l'altro */
+    align-items: center;    /* Li centra orizzontalmente */
+    margin-top: 50px;
+}
+
+/* Stile dei bottoni del menù */
+.menu-options button {
+    width: 300px;           /* Larghezza fissa generosa */
+    padding: 20px;          /* Più spazio interno per farli "alti" */
+    font-size: 1.5rem;      /* Testo bello grande */
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    
+    /* Stile estetico (seguendo il tuo tema) */
+    background: #e6cda4; 
+    border: 5px solid #ad7a59;
+    color: #5d4037;
+    border-radius: 10px;
+    
+    transition: all 0.2s ease; /* Animazione fluida */
+}
+
+/* Effetto al passaggio del mouse */
+.menu-options button:hover {
+    background: #d4af37;    /* Diventa color oro */
+    border-color: #5d4037;
+    transform: scale(1.05); /* Si ingrandisce leggermente */
+    color: white;
 }

@@ -1,6 +1,14 @@
 const aspetta = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const db = require('./database.js');
-
+function startGame() {
+    const menu = document.getElementById("main-menu");
+    menu.style.transition = "opacity 0.5s";
+    menu.style.opacity = "0";
+    
+    setTimeout(() => {
+        menu.classList.add("hidden"); // Lo nascondi del tutto dopo l'animazione
+    }, 500);
+}
 let gameState = {
     fase: "TURNO_GIOCATORE", // Può essere: TURNO_GIOCATORE, TURNO_NEMICO, VITTORIA, GAME_OVER
     animazioneInCorso: false
