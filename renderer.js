@@ -118,10 +118,10 @@ async function turnoNemico() {
         dannoTurnoNemico = nemico.attacco;
     }
     if(giocatore.armatura.nome==="Armatura di maglia"){
-        dannoTurnoNemico=dannoTurnoNemico;
+        dannoTurnoNemico=nemico.attacco-5;
     }
     if(giocatore.armatura.nome==="Armatura di ferro"){
-        dannoTurnoNemico-=5;
+        dannoTurnoNemico=nemico.attacco-dannoTurnoNemico;
     }
     giocatore.hp -= dannoTurnoNemico;
     if (giocatore.hp < 0) giocatore.hp = 0;
