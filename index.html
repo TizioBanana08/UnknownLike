@@ -5,6 +5,16 @@
         <meta charset="UTF-8">
     </head>
     <body>
+        <div id="main-menu">
+            <div class="menu-content">
+                <h1 class="game-title">UNKNOWN LIKE</h1>
+                <div class="menu-options">
+                    <button onclick="startGame()">INIZIA PARTITA</button>
+                    <button onclick="openSettings()">IMPOSTAZIONI</button>
+                    <button onclick="quitGame()">ESCI</button>
+                </div>
+            </div>
+        </div>
         <div class="game-container">
             <div class="battle-area">
                 <div class="entity" id="player-card">
@@ -54,7 +64,8 @@
                     <p id="desc-text">Descrizione dell'effetto...</p>
                 </div>
                 <div class="actions-container">
-                    <button onclick="attaccoGiocatore()">Attacca con l'arma!</button>
+                    <button onclick="attaccoGiocatore()" id="atk-button">Attacca con l'arma!</button>
+                    <button onclick="cura()" id="heal-button">Curati!</button>
                 </div>
                 
             </div>
