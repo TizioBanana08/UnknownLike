@@ -217,6 +217,7 @@ li{
     padding: 8px;
     image-rendering: pixelated; 
     transition: transform 0.2s, border-color 0.2s;
+
 }
 .item-container img:hover {
     transform: scale(1.1);
