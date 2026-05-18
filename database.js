@@ -87,13 +87,15 @@ const database={
         armaturaFerro:{
             nome:"Armatura di ferro",
             difesa:10,
-            sprite:"assets/iron_armor.png",
+            sprite:"assets/ironArmor.png",
             descrizione:"Una solida e pesante armatura in ferro, una garanzia per eludere i colpi nemici!",
+            
             //L'armatura ha la possibilità del 20% di aumentare la difesa di 5 punti per un turno
             abilita_passiva(){
+                chance = generaRandom();
                 if(chance){
                     aggiungiLog("Attacco resistito!");
-                    return armaturaFerro.difesa+5;
+                    return danno_ridotto=5;
                 }
                 else{
                     return 0;
@@ -129,8 +131,8 @@ const database={
             nome:"Cavalier Pristol",
             hp: 100,
             maxHp: 100,
-            arma: "arco",
-            armatura:"armaturaMaglia",
+            arma: "lancia",
+            armatura:"armaturaFerro",
             sprite: "assets/base_knight.png"
         },
     },
