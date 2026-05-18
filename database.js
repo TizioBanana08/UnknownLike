@@ -86,7 +86,7 @@ const database={
             nome: "Slime", 
             hp: 40, 
             maxHp:40, 
-            attacco: 5, 
+            attacco: 100, 
             sprite: "assets/slime.png" 
         },
         goblin: { 
