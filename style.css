@@ -160,11 +160,11 @@ li{
     justify-content: center;
 }
 
-.actions-container, .inventory-container {
+.actions-container {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     border: 5px solid #ad7a59;
     padding: 20px;
     background: #e6cda4;
@@ -178,33 +178,58 @@ li{
     font-size: 1.1rem;
     font-weight: bold;
 }
-.item-container {
-    font-weight: bold;
+.inventory-container {
+    flex: 1;
     display: flex;
-    flex-direction: column; /* Mette il testo sopra l'immagine */
-    align-items: center;    /* Centra tutto */
-    padding: 5px;
-    border-radius: 10px;
-    margin: 5px;
+    flex-direction: column;
+    justify-content: center; /* Centra i due blocchi verticalmente */
+    align-items: center;
+    border: 5px solid #ad7a59;
+    padding: 10px;
+    background: #e6cda4;
+    border-radius: 5px;
+    height: 100%; /* Forza il contenitore a stare nei limiti della bottom-bar */
+    overflow: hidden; /* Impedisce che gli item escano dai bordi */
+}
+.item-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex: 1; /* Divide lo spazio a metà tra arma e armatura */
+    margin: 0; 
+    min-height: 0; /* Fix per Flexbox su alcuni browser/versioni Electron */
 }
 
 .item-container img {
-    width: 80px;
-    height: 80px;
-    padding: 5px;
-    background: #3e2723; /* Colore legno scuro per lo slot */
-    border: 4px inset #5d4037; /* Effetto "scavato" nel legno */
-    border-radius: 5px;
-    image-rendering: pixelated; /* Se usi pixel art, le rende nitide */
-    transition: transform 0.2s; /* Per l'effetto hover */
+    /* Usiamo una dimensione basata sull'altezza dello schermo (vh) 
+       per evitare che l'immagine sia più grande del contenitore stesso */
+    height: 12vh; 
+    width: 12vh;
+    max-height: 80px; /* Limite massimo per schermi grandi */
+    max-width: 80px;
+    
+    background: #3e2723;
+    border: 4px inset #5d4037;
+    border-radius: 8px;
+    object-fit: contain; /* L'immagine non si deforma */
+    padding: 8px;
+    image-rendering: pixelated; 
+    transition: transform 0.2s, border-color 0.2s;
 }
 .item-container img:hover {
     transform: scale(1.1);
-    border-color: #d4af37; /* Diventa color oro al passaggio */
+    border-color: #d4af37;
     cursor: pointer;
 }
-.item-container p{
-    margin-top: 5px;
+.item-container p {
+    margin: 2px 0 5px 0; /* Ridotto il margine per risparmiare spazio */
+    font-size: 0.85rem;
+    color: #4a332d;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: center;
 }
 #weapon-sprite-img {
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); /* Un leggero bagliore dorato */

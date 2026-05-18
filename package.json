@@ -12,6 +12,6 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "electron": "^42.0.1"
+    "electron": "^42.1.0"
   }
 }
