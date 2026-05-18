@@ -123,6 +123,9 @@ async function turnoNemico() {
     if(giocatore.armatura.nome==="Armatura di ferro"){
         dannoTurnoNemico=nemico.attacco-dannoTurnoNemico;
     }
+    if(giocatore.armatura.nome==="Armatura Angelica"){
+        dannoTurnoNemico=nemico.attacco;
+    }
     giocatore.hp -= dannoTurnoNemico;
     if (giocatore.hp < 0) giocatore.hp = 0;
     

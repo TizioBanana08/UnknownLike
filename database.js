@@ -101,6 +101,23 @@ const database={
                     return 0;
                 }
             }
+        },
+
+        armaturaAngelica:{
+            nome:"Armatura Angelica",
+            difesa:15,
+            sprite:"assets/angelicArmor.png",
+            descrizione:"armatura creata dagli angeli, chiunque la indossi sarà benedetto in ogni battaglia",
+            //Ogni turno cura il giocatore di 5 hp
+            abilita_passiva(){
+                giocatore.hp += 5;
+                if(giocatore.hp>giocatore.maxHp){
+                    giocatore.hp=giocatore.maxHp;
+                }
+                aggiungiLog("La tua armatura ti cura di 5 hp!");
+                aggiornaUI();
+                return 0;
+            }
         }
     },
     nemici:{
@@ -132,7 +149,7 @@ const database={
             hp: 100,
             maxHp: 100,
             arma: "lancia",
-            armatura:"armaturaFerro",
+            armatura:"armaturaAngelica",
             sprite: "assets/base_knight.png"
         },
     },
