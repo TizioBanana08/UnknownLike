@@ -122,13 +122,22 @@ async function turnoNemico() {
         gameState.fase = "GAME_OVER";
         await aspetta(1500);
         aggiungiLog("💀 Sei stato sconfitto! Riavvio...");
-        await aspetta(2000);
-        location.reload();
+        setTimeout(mostraGameOver, 1000);
     } else {
         await aspetta(1000);
         gameState.fase = "TURNO_GIOCATORE";
         aggiungiLog("🛡️ È il tuo turno!");
     }
+}
+function mostraGameOver(){
+    const screen=document.getElementById("game-over-screen");
+    screen.classList.remove("hidden");
+}
+function restartGame(){
+    location.reload();
+}
+function quitGame(){
+    window.close();
 }
 function aggiungiLog(messaggio) {
     const log = document.getElementById("battle-log");

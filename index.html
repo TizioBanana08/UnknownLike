@@ -35,7 +35,7 @@
             <div id="bottom-bar">
                 <div class="log-container">
                     <div id="title-log">
-                        <h1>Battle Log</h1>
+                        <p>BATTLE LOG</p>
                     </div>
                     <ul id="battle-log"></ul>
                 </div>
@@ -59,6 +59,16 @@
                 
             </div>
             
+        </div>
+        <div id="game-over-screen" class="hidden">
+            <div class="game-over-content">
+                <h1>SEI STATO SCONFITTO</h1>
+                <p>Il tuo viaggio finisce qui...</p>
+                <div class="game-over-buttons">
+                    <button onclick="restartGame()">Riprova</button>
+                    <button onclick="quitGame()">Esci dal Gioco</button>
+                </div>
+            </div>
         </div>
         <script src="renderer.js"></script>
     </body>
