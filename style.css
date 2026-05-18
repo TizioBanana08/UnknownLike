@@ -205,8 +205,8 @@ li{
 .item-container img {
     /* Usiamo una dimensione basata sull'altezza dello schermo (vh) 
        per evitare che l'immagine sia più grande del contenitore stesso */
-    height: 12vh; 
-    width: 12vh;
+    height: 20vh; 
+    width: 20vh;
     max-height: 80px; /* Limite massimo per schermi grandi */
     max-width: 80px;
     
@@ -226,7 +226,7 @@ li{
 }
 .item-container p {
     margin: 2px 0 5px 0; /* Ridotto il margine per risparmiare spazio */
-    font-size: 0.85rem;
+    font-size: 1.5rem;
     color: #4a332d;
     text-transform: uppercase;
     font-weight: bold;
