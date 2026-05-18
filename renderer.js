@@ -103,12 +103,20 @@ async function turnoNemico() {
     // Non serve setTimeout, usiamo await aspetta
     aggiungiLog(`🎲 ${nemico.nome} si prepara ad attaccare...`);
     await aspetta(1200);
-
-    giocatore.hp -= nemico.attacco;
+    let dannoTurnoNemico=nemico.attacco;
+    if (typeof giocatore.armatura.abilita_passiva === "function") {
+        dannoTurnoNemico = giocatore.armatura.abilita_passiva();
+    } else {
+        dannoTurnoNemico = nemico.attacco;
+    }
+    if(giocatore.armatura.nome==="Armatura di ferro"){
+        dannoTurnoNemico=dannoTurnoNemico-5;
+    }
+    giocatore.hp -= dannoTurnoNemico;
     if (giocatore.hp < 0) giocatore.hp = 0;
     
     aggiornaUI();
-    aggiungiLog(`💥 ${nemico.nome} ti colpisce per ${nemico.attacco} danni!`);
+    aggiungiLog(`💥 ${nemico.nome} ti colpisce per ${dannoTurnoNemico} danni!`);
 
     if (giocatore.hp <= 0) {
         gameState.fase = "GAME_OVER";

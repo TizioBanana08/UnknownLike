@@ -77,9 +77,29 @@ const database={
             nome:"Armatura di maglia",
             difesa:5,
             sprite:"assets/chainmail.png",
-            descrizione:"Una resistente armatura in cotta di maglia, con lei non si sbaglia mai!"
-            //l'armatura base non aggiunge nessuna abilità passiva
+            descrizione:"Una resistente armatura in cotta di maglia, con lei non si sbaglia mai!",
+            //l'armatura base non aggiunge nessuna abilità passiva (per questione di codice però ne inserisco una vuota per evitare errori)
+            abilita_passiva(){
+                return 0;
+            },
         },
+
+        armaturaFerro:{
+            nome:"Armatura di ferro",
+            difesa:10,
+            sprite:"assets/iron_armor.png",
+            descrizione:"Una solida e pesante armatura in ferro, una garanzia per eludere i colpi nemici!",
+            //L'armatura ha la possibilità del 20% di aumentare la difesa di 5 punti per un turno
+            abilita_passiva(){
+                if(chance){
+                    aggiungiLog("Attacco resistito!");
+                    return armaturaFerro.difesa+5;
+                }
+                else{
+                    return 0;
+                }
+            }
+        }
     },
     nemici:{
         slime: { 
@@ -87,14 +107,14 @@ const database={
             hp: 40, 
             maxHp:40, 
             attacco: 5, 
-            sprite: "assets/slime.png" 
+            sprite: "assets/slime.png"
         },
         goblin: { 
             nome: "Goblin", 
             hp: 80, 
             maxHp:80, 
             attacco: 12, 
-            sprite: "assets/goblin.png" 
+            sprite: "assets/goblin.png"
         },
         scheletro: { 
             nome: "Guerriero Osseo", 
