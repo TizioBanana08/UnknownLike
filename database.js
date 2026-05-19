@@ -92,13 +92,12 @@ const database={
             difesa:10,
             sprite:"assets/ironArmor.png",
             descrizione:"Una solida e pesante armatura in ferro, una garanzia per eludere i colpi nemici!",
-            
             //L'armatura ha la possibilità del 20% di aumentare la difesa di 5 punti per un turno
             abilita_passiva(){
                 chance = generaRandom();
                 if(chance){
-                    aggiungiLog("Attacco resistito!");
-                    return danno_ridotto=5;
+                    aggiungiLog("🛡️ Attacco resistito!");
+                    return 5;
                 }
                 else{
                     return 0;
@@ -113,11 +112,9 @@ const database={
             descrizione:"armatura creata dagli angeli, chiunque la indossi sarà benedetto in ogni battaglia",
             //Ogni turno cura il giocatore di 5 hp
             abilita_passiva(){
-                giocatore.hp += 5;
-                if(giocatore.hp>giocatore.maxHp){
-                    giocatore.hp=giocatore.maxHp;
-                }
-                aggiungiLog("La tua armatura ti cura di 5 hp!");
+                const cura = 5;
+                giocatore.hp = Math.min(giocatore.maxHp, giocatore.hp + cura);
+                aggiungiLog("✨ L'Armatura Angelica ti cura di 5 HP!");
                 aggiornaUI();
                 return 0;
             }
@@ -152,7 +149,7 @@ const database={
             hp: 100,
             maxHp: 100,
             arma: "spada",
-            armatura:"armaturaAngelica",
+            armatura:"armaturaFerro",
             sprite: "assets/base_knight.png"
         },
     },

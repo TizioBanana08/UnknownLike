@@ -148,20 +148,11 @@ async function turnoNemico() {
     aggiungiLog(`🎲 ${nemico.nome} si prepara ad attaccare...`);
     await aspetta(1200);
     let dannoTurnoNemico=nemico.attacco;
+    dannoTurnoNemico-=giocatore.armatura.difesa;
     if (typeof giocatore.armatura.abilita_passiva === "function") {
-        dannoTurnoNemico = giocatore.armatura.abilita_passiva();
-    } else {
-        dannoTurnoNemico = nemico.attacco;
+        dannoTurnoNemico -= giocatore.armatura.abilita_passiva();
     }
-    if(giocatore.armatura.nome==="Armatura di maglia"){
-        dannoTurnoNemico=nemico.attacco-5;
-    }
-    if(giocatore.armatura.nome==="Armatura di ferro"){
-        dannoTurnoNemico=nemico.attacco-dannoTurnoNemico;
-    }
-    if(giocatore.armatura.nome==="Armatura Angelica"){
-        dannoTurnoNemico=nemico.attacco;
-    }
+    if(dannoTurnoNemico<0) dannoTurnoNemico=0;
     giocatore.hp -= dannoTurnoNemico;
     if (giocatore.hp < 0) giocatore.hp = 0;
     
