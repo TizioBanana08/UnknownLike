@@ -166,32 +166,41 @@ li{
 }
 
 .actions-container {
-    flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    border: 5px solid #ad7a59;
-    padding: 20px;
-    background: #e6cda4;
-    border-radius: 5px;
-    height: 80%;
+    gap: 10px; /* Spazio verticale tra la riga e il tasto cura */
+    width: 100%;
+}
+
+.action-row {
+    display: flex;
+    gap: 10px; /* Spazio orizzontale tra Attacco e Speciale */
+    width: 100%;
+    height: 50%; /* Occupa metà dello spazio disponibile verticalmente */
 }
 
 .actions-container button {
-    width: 100%;
-    height: 100%;
-    font-size: 1.5rem;
+    flex: 1; /* Fa sì che i bottoni occupino tutto lo spazio disponibile nel loro contenitore */
+    font-size: 1.2rem;
     font-weight: bold;
-    
-    color:white;
-    
+    color: white;
+    cursor: pointer;
+    border: 3px solid rgba(0,0,0,0.2);
+    border-radius: 5px;
+    transition: transform 0.1s;
 }
-#atk-button{
-    background-color: red;
+
+/* Colori specifici */
+#atk-button { background-color: #b71c1c; }
+#special-atk-button { background-color: #6a1b9a; }
+#heal-button { 
+    background-color: #2e7d32; 
+    width: 100%; /* Il tasto cura occupa tutta la larghezza sotto */
+    height: 45%; 
 }
-#heal-button{
-    margin-top: 10px;
-    background-color: green;
+
+.actions-container button:active {
+    transform: scale(0.95); /* Effetto pressione */
 }
 .inventory-container {
     flex: 1;
