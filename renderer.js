@@ -1,5 +1,6 @@
 const aspetta = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const db = require('./database.js');
+var turnCounter=1;
 function startGame() {
     const menu = document.getElementById("main-menu");
     menu.style.transition = "opacity 0.5s";
@@ -87,12 +88,47 @@ async function attaccoGiocatore() {
     aggiornaUI();
 
     if (dannoTurno > giocatore.arma.atk) {
+        turnCounter+=1;
         aggiungiLog(`✨ Effetto attivato! Danno totale: ${dannoTurno} HP`);
         aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
     } else {
+        turnCounter+=1;
         aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
     }
 
+    if (nemico.hp > 0) {
+       
+        gameState.fase = "TURNO_NEMICO";
+        // Aspettiamo un po' prima che il nemico reagisca
+        await aspetta(1500);
+        await turnoNemico();
+    } else {
+        gameState.fase = "VITTORIA";
+        aggiungiLog("🏆 Il nemico è stato sconfitto!");
+    }
+}
+async function attaccoSpeciale(){
+    if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0) return;
+    let dannoTurno=0;
+    if (typeof giocatore.arma.abilita_attiva === "function"&&turnCounter%5==0) {
+        dannoTurno = giocatore.arma.abilita_attiva();
+    } else {
+        dannoTurno = giocatore.arma.atk;
+    }
+    nemico.hp -= dannoTurno;
+    if (nemico.hp < 0) nemico.hp = 0;
+    aggiornaUI();
+    if (dannoTurno > giocatore.arma.atk) {
+        
+        aggiungiLog(`✨ Attacco speciale attivato! Danno totale: ${dannoTurno} HP`);
+        aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
+        turnCounter+=1;
+    }
+    else{
+        aggiungiLog(`❌ Impossibile utilizzare abilità attiva, aspetta ${5-(turnCounter%5)} turni. Attacco base lanciato!`)
+        aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
+        turnCounter+=1;
+    }
     if (nemico.hp > 0) {
         gameState.fase = "TURNO_NEMICO";
         // Aspettiamo un po' prima che il nemico reagisca

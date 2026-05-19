@@ -10,7 +10,10 @@ const database={
             abilita_passiva(){
                 return danno_aggiuntivo=1;
             },
-            descrizione: "La più fidata arma per un cavaliere, non dimenticarla mai in uno scontro"
+            descrizione: "La più fidata arma per un cavaliere, non dimenticarla mai in uno scontro",
+            abilita_attiva(){
+                return this.atk*2;
+            }
         },
         //Oggetto arco base
         arco:{
@@ -148,7 +151,7 @@ const database={
             nome:"Cavalier Pristol",
             hp: 100,
             maxHp: 100,
-            arma: "lancia",
+            arma: "spada",
             armatura:"armaturaAngelica",
             sprite: "assets/base_knight.png"
         },
