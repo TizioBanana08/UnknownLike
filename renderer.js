@@ -303,7 +303,21 @@ function toggleOptions() {
     giocoInPausa = menu.classList.contains("visible");
 }
 
+<<<<<<< Updated upstream
 // --- EVENT LISTENERS E DESCRITTORI OGGETTI ---
+=======
+<<<<<<< HEAD
+function checkStatus(){
+    if(giocatore.stato==null){
+        giocatore.hp=giocatore.hp;
+    }else if(giocatore.stato=="burn"){
+        giocatore.hp-=3;
+    }
+}
+=======
+// --- EVENT LISTENERS E DESCRITTORI OGGETTI ---
+>>>>>>> ca5f311ee6bc39a0a65a69db7d2761cea8a14b87
+>>>>>>> Stashed changes
 
 const weaponImg = document.getElementById("weapon-sprite-img");
 const armorImg = document.getElementById("armor-sprite-img");
