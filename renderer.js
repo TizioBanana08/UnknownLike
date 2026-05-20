@@ -2,7 +2,7 @@ const aspetta = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const db = require('./database.js');
 var turnCounter = 1;
 let giocoInPausa = false;
-
+let ultimoTurnoSpeciale = 0;
 // --- GESTIONE MENU E SCELTA ARMI ---
 
 function startGame() {
@@ -200,8 +200,16 @@ async function attaccoSpeciale(){
     if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0 || giocoInPausa) return;
     
     let dannoTurno = 0;
-    if (typeof giocatore.arma.abilita_attiva === "function" && (turnCounter % 5 == 0)) {
+    
+    // Calcoliamo quanti turni sono passati dall'ultimo utilizzo (o dall'inizio del gioco)
+    let turniPassati = turnCounter - ultimoTurnoSpeciale;
+    
+    // INVECE DEL MODULO % 5, CONTROLLIAMO SE SONO PASSATI ALMENO 5 TURNI
+    if (typeof giocatore.arma.abilita_attiva === "function" && turniPassati >= 5) {
         dannoTurno = giocatore.arma.abilita_attiva();
+        
+        // Aggiorniamo il contatore: l'abbiamo appena usata in questo turno!
+        ultimoTurnoSpeciale = turnCounter; 
     } else {
         dannoTurno = giocatore.arma.atk;
     }
@@ -216,7 +224,8 @@ async function attaccoSpeciale(){
         aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
         turnCounter += 1;
     } else {
-        let turniMancanti = 5 - (turnCounter % 5);
+        // Calcolo corretto dei turni mancanti
+        let turniMancanti = 5 - turniPassati;
         aggiungiLog(`❌ Impossibile usare l'abilità speciale, aspetta ${turniMancanti} turni. Attacco base lanciato!`);
         aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
         turnCounter += 1;

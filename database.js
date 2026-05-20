@@ -158,7 +158,7 @@ const database={
         },
         goblin: { 
             nome: "Goblin", 
-            hp: 80, 
+            hp: 120, 
             maxHp:80, 
             attacco: 12, 
             stato:null,
