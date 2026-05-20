@@ -35,7 +35,7 @@ const database={
             sprite:"assets/axe.png",
             //abilità passiva crit chance: ogni attacco ha una possibiltà del 20% di infliggere il doppio del danno
             abilita_passiva(){      
-                chance = generaRandom();
+                chance = controllaSuccesso(20);
                 if(chance){
                     return danno_aggiuntivo=this.atk*2;
                 }
@@ -63,7 +63,7 @@ const database={
             sprite:"assets/spear.png",
             //abilità passiva doppio affondo: ogni attacco ha una possibilità del 20% di fare un secondo attacco al nemico che infligge 5 danni in più 
             abilita_passiva(){
-                chance = generaRandom();
+                chance = controllaSuccesso(20);
                 if(chance){
                     return danno_aggiuntivo=this.atk+5;
                 }
@@ -83,7 +83,7 @@ const database={
             },
             //abilità attiva:spara una palla di fuoco che infligge 30 danni e ha una chance del 20% di bruciare(al momento infliggere 5 danni in più)
             abilita_attiva(){
-                chance=generaRandom();
+                chance=controllaSuccesso(20);
                 if(chance){
                     aggiungiLog("🔥Hai lanciato una palla di fuoco che brucia il nemico!");
                     return 35;
@@ -177,26 +177,6 @@ const database={
     },
 }
 module.exports = database;
-function generaRandom() {
-    let array=[];
-    let estratto=false;
-    for(let i=0;i<5;i++){
-        if(estratto){
-            array.push(1);
-        }
-        else{
-            dato=Math.floor(Math.random()*2);
-            if(dato==0){
-                estratto=true;
-            }
-            array.push(dato);
-        }
-    }
-    let idx=Math.floor(Math.random()*5);
-    if(array[idx]==0){
-        return true;
-    }
-    else{
-        return false;
-    }
+function controllaSuccesso(percentuale) {
+    return Math.random() * 100 < percentuale;
 }
