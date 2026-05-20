@@ -77,7 +77,7 @@ async function attaccoGiocatore() {
         dannoTurno = giocatore.arma.atk;
     }
     if(giocatore.arma.nome==="Spada"){
-        dannoTurno=giocatore.arma.atk+1;
+        dannoTurno=giocatore.arma.atk+turnCounter;
     }
     if(giocatore.arma.nome==="Lancia"){
         dannoTurno=giocatore.arma.atk+dannoTurno;
