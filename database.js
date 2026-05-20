@@ -84,14 +84,14 @@ const database={
             atk:20,
             descrizione:"Una spada forgiata nelle fiamme dell'inferno pronta incenerire i tuoi nemici!",
             abilita_passiva(){
-                return danno_aggiuntivo=1;
+                return danno_aggiuntivo=this.atk+1;
             },
             //abilità attiva:spara una palla di fuoco che infligge 30 danni e ha una chance del 20% di bruciare(al momento infliggere 5 danni in più)
             abilita_attiva(){
                 chance=controllaSuccesso(20);
                 if(chance){
                     aggiungiLog("🔥Hai lanciato una palla di fuoco che brucia il nemico!");
-                    return 35;
+                    return 30;
                 }else{
                     aggiungiLog("🔥Hai lanciato una palla di fuoco");
                     return 30;
@@ -153,6 +153,7 @@ const database={
             hp: 40, 
             maxHp:40, 
             attacco: 5, 
+            stato:null,
             sprite: "assets/slime.png"
         },
         goblin: { 
@@ -160,6 +161,7 @@ const database={
             hp: 80, 
             maxHp:80, 
             attacco: 12, 
+            stato:null,
             sprite: "assets/goblin.png"
         },
         scheletro: { 
@@ -167,6 +169,7 @@ const database={
             hp: 100, 
             maxHp:100,
             attacco: 12, 
+            stato:null,
             sprite: "assets/skeleton.png",
         },
     },
@@ -175,8 +178,9 @@ const database={
             nome:"Cavalier Pristol",
             hp: 100,
             maxHp: 100,
-            arma: "ascia",
+            arma: "tirapugni",
             armatura:"armaturaMaglia",
+            stato:null,
             sprite: "assets/base_knight.png"
         },
     },

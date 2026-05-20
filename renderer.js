@@ -165,10 +165,8 @@ async function attaccoGiocatore() {
     } else {
         dannoTurno = giocatore.arma.atk;
     }
-    
-    // Controlli specifici per armi (forse in futuro potresti spostarli nel DB)
-    if(giocatore.arma.nome === "Spada"){
-        dannoTurno = giocatore.arma.atk + 1;
+    if(giocatore.arma.nome==="Spada"){
+        dannoTurno=giocatore.arma.atk+1;
     }
     if(giocatore.arma.nome === "Lancia"){
         dannoTurno = giocatore.arma.atk + dannoTurno;
