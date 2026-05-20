@@ -8,8 +8,7 @@ let giocoInPausa = false;
 function startGame() {
     const menu = document.getElementById("main-menu");
     menu.style.opacity = "0";
-    
-    setTimeout(() => {
+
         menu.classList.add("hidden");
         
         // Chiamiamo la funzione che pesca le armi (ora definita sotto)
@@ -18,7 +17,7 @@ function startGame() {
         const weaponScreen = document.getElementById("weapon-selection-screen");
         weaponScreen.classList.remove("hidden");
         weaponScreen.classList.add("visible");
-    }, 500);
+
 }
 
 // Questa è la funzione che mancava o aveva il nome sbagliato
@@ -201,7 +200,7 @@ async function attaccoSpeciale(){
     if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0 || giocoInPausa) return;
     
     let dannoTurno = 0;
-    if (typeof giocatore.arma.abilita_attiva === "function" && turnCounter % 5 == 0) {
+    if (typeof giocatore.arma.abilita_attiva === "function" && (turnCounter % 5 == 0)) {
         dannoTurno = giocatore.arma.abilita_attiva();
     } else {
         dannoTurno = giocatore.arma.atk;
