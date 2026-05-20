@@ -1,6 +1,7 @@
 const aspetta = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const db = require('./database.js');
 var turnCounter=1;
+let giocoInPausa = false;
 function startGame() {
     const menu = document.getElementById("main-menu");
     menu.style.transition = "opacity 0.5s";
@@ -68,7 +69,7 @@ function cambiaColoreHealthBar(vitaP,id){
     }
 }
 async function attaccoGiocatore() {
-    if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0) return;
+    if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0||gameState.pausa) return;
     let dannoTurno=0;
     if (typeof giocatore.arma.abilita_passiva === "function") {
         dannoTurno = giocatore.arma.abilita_passiva();
@@ -108,7 +109,7 @@ async function attaccoGiocatore() {
     }
 }
 async function attaccoSpeciale(){
-    if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0) return;
+    if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0 ||gameState.pausa) return;
     let dannoTurno=0;
     if (typeof giocatore.arma.abilita_attiva === "function"&&turnCounter%5==0) {
         dannoTurno = giocatore.arma.abilita_attiva();
@@ -145,6 +146,7 @@ function turnoNemico(){
 }
 async function turnoNemico() {
     // Non serve setTimeout, usiamo await aspetta
+    if(gameState.pausa) return;
     aggiungiLog(`🎲 ${nemico.nome} si prepara ad attaccare...`);
     await aspetta(1200);
     let dannoTurnoNemico=nemico.attacco;
@@ -187,6 +189,18 @@ function aggiungiLog(messaggio) {
     log.insertBefore(li, log.firstChild);
     log.scrollBottom = log.scrollHeight;
 }
+// Funzione per aprire/chiudere il menu
+function toggleOptions() {
+    const menu = document.getElementById("options-menu");
+    if (!menu) {
+        console.error("Errore: Il div options-menu non esiste nell'HTML!");
+        return;
+    }
+    menu.classList.toggle("visible");
+    giocoInPausa = menu.classList.contains("visible");
+}
+
+
 const weaponImg = document.getElementById("weapon-sprite-img");
 const armorImg=document.getElementById("armor-sprite-img");
 const descBox = document.getElementById("item-description");
@@ -223,5 +237,14 @@ window.onclick = (event) => {
         descBox.classList.add("hidden");
     }
 };
+// Ascolta la tastiera
+window.addEventListener('keydown', (event) => {
+    console.log("Tasto premuto:", event.key);
+    if (event.key === "Escape") {
+        // Se siamo nel menu principale magari non vogliamo aprirlo, 
+        // ma in battaglia o esplorazione sì.
+        toggleOptions();
+    }
+});
 // Inizializza l'app
 aggiornaUI();

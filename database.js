@@ -148,8 +148,8 @@ const database={
             nome:"Cavalier Pristol",
             hp: 100,
             maxHp: 100,
-            arma: "spada",
-            armatura:"armaturaFerro",
+            arma: "ascia",
+            armatura:"armaturaMaglia",
             sprite: "assets/base_knight.png"
         },
     },
