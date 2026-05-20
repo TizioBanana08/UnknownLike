@@ -242,11 +242,16 @@ async function attaccoSpeciale(){
 }
 
 async function turnoNemico() {
-    if(giocoInPausa) return;
+    while (giocoInPausa) {
+        await aspetta(200); // Aspetta 0.2 secondi e poi ricontrolla
+    }
     
     aggiungiLog(`🎲 ${nemico.nome} si prepara ad attaccare...`);
     await aspetta(1200);
-    
+
+    while (giocoInPausa) {
+        await aspetta(200);
+    }
     let dannoTurnoNemico = nemico.attacco;
     dannoTurnoNemico -= giocatore.armatura.difesa;
     
@@ -269,6 +274,9 @@ async function turnoNemico() {
         setTimeout(mostraGameOver, 1000);
     } else {
         await aspetta(1000);
+        while (giocoInPausa) {
+            await aspetta(200);
+        }
         gameState.fase = "TURNO_GIOCATORE";
         aggiungiLog("🛡️ È il tuo turno!");
     }
@@ -309,6 +317,9 @@ function toggleOptions() {
     }
     menu.classList.toggle("visible");
     giocoInPausa = menu.classList.contains("visible");
+    if (giocoInPausa) {
+        document.activeElement.blur();
+    }
 }
 
 function checkStatus(){
