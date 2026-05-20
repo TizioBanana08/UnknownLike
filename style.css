@@ -45,7 +45,20 @@ li{
     width: 100%;
     margin-top: 20px;
 }
-
+#main-container {
+    display: none; 
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
+#main-container.active, 
+#weapon-selection-screen.visible {
+    display: flex !important; /* o block, a seconda del tuo layout */
+}
+#main-container.hidden {
+    display: none !important;
+}
 .entity {
     display: flex;
     flex-direction: column;
@@ -433,4 +446,69 @@ li{
     flex-direction: column;
     gap: 15px;
     margin-top: 20px;
+}
+#weapon-selection-screen {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background-color: #87ceeb; /* Un colore di sfondo a tua scelta, o un'immagine */
+    display: none !important; /* Nascosto di default */
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1000;
+    
+}
+
+#weapon-selection-screen.visible {
+    display: flex !important;
+}
+
+.weapons-container {
+    display: flex;
+    gap: 30px; /* Spazio tra le carte */
+    margin-top: 40px;
+}
+
+.weapon-card {
+    background: #e6cda4;
+    border: 5px solid #ad7a59;
+    border-radius: 10px;
+    padding: 20px;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
+    box-shadow: 5px 5px 0px rgba(0,0,0,0.3);
+}
+
+.weapon-card h3 {
+    margin: 0;
+    color: #5d4037;
+}
+
+.weapon-card img {
+    width: 80px;
+    height: 80px;
+    image-rendering: pixelated; /* Perfetto se usi la pixel art */
+}
+
+.weapon-card button {
+    background: #5d4037;
+    color: white;
+    border: 3px solid #3e2723;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: auto; /* Spinge il bottone sempre in fondo alla carta */
+    transition: transform 0.1s, background 0.2s;
+}
+
+.weapon-card button:hover {
+    background: #d4af37; /* Diventa dorato al passaggio del mouse */
+    transform: scale(1.1);
 }

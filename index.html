@@ -5,6 +5,31 @@
         <meta charset="UTF-8">
     </head>
     <body>
+        <div id="weapon-selection-screen" class="hidden">
+            <div class="selection-content">
+                <h1 class="game-title">SCEGLI LA TUA ARMA</h1>
+                <div class="weapons-container">
+                    <div class="weapon-card">
+                        <h3>SPADA CORTA</h3>
+                            <img src="" alt="Spada"> 
+                                <p>Danno stabile, facile da usare. Ottima per iniziare.</p>
+                                <button onclick="selezionaStarter('spada')">SCEGLI</button>
+                    </div>
+                <div class="weapon-card">
+                    <h3>ARCO LUNGO</h3>
+                    <img src="" alt="Arco">
+                    <p>Attacco a distanza con un'alta chance di colpo critico.</p>
+                    <button onclick="selezionaStarter('arco')">SCEGLI</button>
+                </div>
+            <div class="weapon-card">
+                <h3>BASTONE MAGICO</h3>
+                <img src="" alt="Bastone">
+                <p>Infligge danni magici elevati, ma consuma Mana.</p>
+                <button onclick="selezionaStarter('bastone')">SCEGLI</button>
+            </div>
+                </div>
+            </div>
+        </div>
         <div id="main-menu">
             <div class="menu-content">
                 <h1 class="game-title">UNKNOWN LIKE</h1>
@@ -15,7 +40,7 @@
                 </div>
             </div>
         </div>
-        <div class="game-container">
+        <div id="main-container" class="hidden">
             <div class="battle-area">
                 <div class="entity" id="player-card">
                     <h2 id="p-name">Eroe</h2>

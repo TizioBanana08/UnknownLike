@@ -1,106 +1,196 @@
 const aspetta = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const db = require('./database.js');
-var turnCounter=1;
+var turnCounter = 1;
 let giocoInPausa = false;
+
+// --- GESTIONE MENU E SCELTA ARMI ---
+
 function startGame() {
     const menu = document.getElementById("main-menu");
-    menu.style.transition = "opacity 0.5s";
     menu.style.opacity = "0";
     
     setTimeout(() => {
-        menu.classList.add("hidden"); // Lo nascondi del tutto dopo l'animazione
+        menu.classList.add("hidden");
+        
+        // Chiamiamo la funzione che pesca le armi (ora definita sotto)
+        preparaSceltaStarter(); 
+        
+        const weaponScreen = document.getElementById("weapon-selection-screen");
+        weaponScreen.classList.remove("hidden");
+        weaponScreen.classList.add("visible");
     }, 500);
 }
+
+// Questa è la funzione che mancava o aveva il nome sbagliato
+function preparaSceltaStarter() {
+    const tutteLeChiavi = Object.keys(db.armi);
+    const armiComuni = tutteLeChiavi.filter(chiave => db.armi[chiave].rarita === "comune");
+
+    let scelte = [];
+    let copiaComuni = [...armiComuni];
+    
+    for (let i = 0; i < 3; i++) {
+        if (copiaComuni.length > 0) {
+            let indice = Math.floor(Math.random() * copiaComuni.length);
+            scelte.push(copiaComuni.splice(indice, 1)[0]);
+        }
+    }
+
+    const container = document.querySelector(".weapons-container");
+    container.innerHTML = ""; 
+
+    scelte.forEach(chiave => {
+        const arma = db.armi[chiave];
+        container.innerHTML += `
+            <div class="weapon-card">
+                <h3>${arma.nome}</h3>
+                <img src="${arma.sprite}" alt="${arma.nome}">
+                <p>${arma.descrizione}</p>
+                <button onclick="selezionaStarter('${chiave}')">SCEGLI</button>
+            </div>
+        `;
+    });
+}
+
+function selezionaStarter(chiaveArma) {
+    console.log("Arma scelta:", chiaveArma);
+    giocatore.arma = db.armi[chiaveArma];
+
+    const weaponScreen = document.getElementById("weapon-selection-screen");
+    const mainContainer = document.getElementById("main-container");
+    const mainMenu = document.getElementById("main-menu");
+
+    // Nascondi i menu
+    if (weaponScreen) {
+        weaponScreen.classList.add("hidden");
+        weaponScreen.style.setProperty("display", "none", "important");
+    }
+    if (mainMenu) mainMenu.style.display = "none";
+
+    // MOSTRA IL GIOCO
+    if (mainContainer) {
+        mainContainer.classList.remove("hidden");
+        mainContainer.classList.add("active");
+        
+        // Forza il display via JS per sicurezza massima
+        mainContainer.style.setProperty("display", "flex", "important");
+        
+        console.log("Gioco mostrato correttamente");
+    }
+
+    aggiornaUI();
+    aggiungiLog(`🗡️ Hai scelto ${giocatore.arma.nome}!`);
+    gameState.fase = "TURNO_GIOCATORE";
+}
+// --- STATO DEL GIOCO E INIZIALIZZAZIONE ---
+
 let gameState = {
     fase: "TURNO_GIOCATORE", // Può essere: TURNO_GIOCATORE, TURNO_NEMICO, VITTORIA, GAME_OVER
     animazioneInCorso: false
 };
-//Oggetto Player
-const giocatore=db.personaggi.cavaliere;
-if (typeof giocatore.arma === 'string') {
-    giocatore.arma = db.armi[giocatore.arma];
-}
+
+// Oggetto Player
+const giocatore = db.personaggi.cavaliere;
+giocatore.arma = null;
 if (typeof giocatore.armatura === 'string') {
     giocatore.armatura = db.armature[giocatore.armatura];
-    giocatore.maxHp=giocatore.maxHp+giocatore.armatura.difesa;
-    giocatore.hp=giocatore.hp+giocatore.armatura.difesa;
+    giocatore.maxHp = giocatore.maxHp + giocatore.armatura.difesa;
+    giocatore.hp = giocatore.hp + giocatore.armatura.difesa;
 }
-//Oggeto nemico
+
+// Oggetto nemico
 function generaNemico(){
-    const chiaviNemici=Object.keys(db.nemici);
-    const chiaveCasuale=chiaviNemici[Math.floor(Math.random()*chiaviNemici.length)];
-    const datiNemico=db.nemici[chiaveCasuale];
+    const chiaviNemici = Object.keys(db.nemici);
+    const chiaveCasuale = chiaviNemici[Math.floor(Math.random() * chiaviNemici.length)];
+    const datiNemico = db.nemici[chiaveCasuale];
     return datiNemico;
 }
 var nemico = generaNemico(); 
-function aggiornaUI(){
-    let percentualeVitaP = (giocatore.hp / giocatore.maxHp) * 100;
-    let percentualeVitaE = (nemico.hp / nemico.maxHp) * 100;
-    document.getElementById("p-sprite-img").src=giocatore.sprite;
-    document.getElementById("e-sprite-img").src=nemico.sprite;
-    document.getElementById("weapon-sprite-img").src=giocatore.arma.sprite;
-    document.getElementById("armor-sprite-img").src=giocatore.armatura.sprite;
-    document.getElementById("p-hp").innerText=giocatore.hp;
-    document.getElementById("e-hp").innerText=nemico.hp;
-    document.getElementById("p-name").innerText=giocatore.nome;
-    document.getElementById("e-name").innerText=nemico.nome;
-    document.getElementById("p-weapon").innerText=giocatore.arma.nome;
-    document.getElementById("e-atk").innerText=nemico.attacco;
-    cambiaColoreHealthBar(percentualeVitaP,"p-health-bar");
-    cambiaColoreHealthBar(percentualeVitaE,"e-health-bar");
-}
-function cambiaColoreHealthBar(vitaP,id){
-    var progressBar=document.getElementById(id);
-    progressBar.style.width=vitaP+"%";
-    if(vitaP>75){
-        progressBar.style.backgroundColor="#01ad23"
+
+// --- INTERFACCIA (UI) ---
+
+function aggiornaUI() {
+    // 1. Controllo di sicurezza estremo
+    if (!giocatore || !giocatore.arma || !nemico) {
+        console.warn("AggiornaUI interrotta: dati non ancora pronti.");
+        return;
     }
-    if(vitaP<=75 && vitaP>50){
-        progressBar.style.backgroundColor="#80c02b"
-    }
-    if(vitaP<=50 && vitaP>25){
-        progressBar.style.backgroundColor="#ffd334"
-    }
-    if(vitaP<=25 && vitaP>10){
-        progressBar.style.backgroundColor="#f18030"
-    }
-    if(vitaP<=10){
-        progressBar.style.backgroundColor="#e32f30"
+
+    try {
+        let percentualeVitaP = (giocatore.hp / giocatore.maxHp) * 100;
+        let percentualeVitaE = (nemico.hp / nemico.maxHp) * 100;
+
+        document.getElementById("p-sprite-img").src = giocatore.sprite;
+        document.getElementById("e-sprite-img").src = nemico.sprite;
+        document.getElementById("weapon-sprite-img").src = giocatore.arma.sprite;
+        document.getElementById("armor-sprite-img").src = giocatore.armatura.sprite;
+        
+        document.getElementById("p-hp").innerText = giocatore.hp;
+        document.getElementById("e-hp").innerText = nemico.hp;
+        document.getElementById("p-name").innerText = giocatore.nome;
+        document.getElementById("e-name").innerText = nemico.nome;
+        document.getElementById("p-weapon").innerText = giocatore.arma.nome;
+        document.getElementById("e-atk").innerText = nemico.attacco;
+
+        cambiaColoreHealthBar(percentualeVitaP, "p-health-bar");
+        cambiaColoreHealthBar(percentualeVitaE, "e-health-bar");
+    } catch (error) {
+        console.error("Errore durante l'aggiornamento della UI:", error);
     }
 }
+
+function cambiaColoreHealthBar(vitaP, id){
+    var progressBar = document.getElementById(id);
+    progressBar.style.width = vitaP + "%";
+    if(vitaP > 75){
+        progressBar.style.backgroundColor = "#01ad23";
+    } else if(vitaP <= 75 && vitaP > 50){
+        progressBar.style.backgroundColor = "#80c02b";
+    } else if(vitaP <= 50 && vitaP > 25){
+        progressBar.style.backgroundColor = "#ffd334";
+    } else if(vitaP <= 25 && vitaP > 10){
+        progressBar.style.backgroundColor = "#f18030";
+    } else if(vitaP <= 10){
+        progressBar.style.backgroundColor = "#e32f30";
+    }
+}
+// --- LOGICA DI COMBATTIMENTO ---
+
 async function attaccoGiocatore() {
-    if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0||gameState.pausa) return;
-    let dannoTurno=0;
+    if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0 || giocoInPausa) return;
+    
+    let dannoTurno = 0;
     if (typeof giocatore.arma.abilita_passiva === "function") {
         dannoTurno = giocatore.arma.abilita_passiva();
     } else {
         dannoTurno = giocatore.arma.atk;
     }
-    if(giocatore.arma.nome==="Spada"){
-        dannoTurno=giocatore.arma.atk+1;
+    
+    // Controlli specifici per armi (forse in futuro potresti spostarli nel DB)
+    if(giocatore.arma.nome === "Spada"){
+        dannoTurno = giocatore.arma.atk + 1;
     }
-    if(giocatore.arma.nome==="Lancia"){
-        dannoTurno=giocatore.arma.atk+dannoTurno;
+    if(giocatore.arma.nome === "Lancia"){
+        dannoTurno = giocatore.arma.atk + dannoTurno;
     }
+    
     nemico.hp -= dannoTurno;
     if (nemico.hp < 0) nemico.hp = 0;
     
-    // 2. Aggiorna UI subito per far vedere la barra che scende
+    // Aggiorna UI subito per far vedere la barra che scende
     aggiornaUI();
 
     if (dannoTurno > giocatore.arma.atk) {
-        turnCounter+=1;
+        turnCounter += 1;
         aggiungiLog(`✨ Effetto attivato! Danno totale: ${dannoTurno} HP`);
         aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
     } else {
-        turnCounter+=1;
+        turnCounter += 1;
         aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
     }
 
     if (nemico.hp > 0) {
-       
         gameState.fase = "TURNO_NEMICO";
-        // Aspettiamo un po' prima che il nemico reagisca
         await aspetta(1500);
         await turnoNemico();
     } else {
@@ -108,31 +198,35 @@ async function attaccoGiocatore() {
         aggiungiLog("🏆 Il nemico è stato sconfitto!");
     }
 }
+
 async function attaccoSpeciale(){
-    if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0 ||gameState.pausa) return;
-    let dannoTurno=0;
-    if (typeof giocatore.arma.abilita_attiva === "function"&&turnCounter%5==0) {
+    if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0 || giocoInPausa) return;
+    
+    let dannoTurno = 0;
+    if (typeof giocatore.arma.abilita_attiva === "function" && turnCounter % 5 == 0) {
         dannoTurno = giocatore.arma.abilita_attiva();
     } else {
         dannoTurno = giocatore.arma.atk;
     }
+    
     nemico.hp -= dannoTurno;
     if (nemico.hp < 0) nemico.hp = 0;
+    
     aggiornaUI();
+    
     if (dannoTurno > giocatore.arma.atk) {
-        
         aggiungiLog(`✨ Attacco speciale attivato! Danno totale: ${dannoTurno} HP`);
         aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
-        turnCounter+=1;
-    }
-    else{
-        aggiungiLog(`❌ Impossibile utilizzare abilità attiva, aspetta ${5-(turnCounter%5)} turni. Attacco base lanciato!`)
+        turnCounter += 1;
+    } else {
+        let turniMancanti = 5 - (turnCounter % 5);
+        aggiungiLog(`❌ Impossibile usare l'abilità speciale, aspetta ${turniMancanti} turni. Attacco base lanciato!`);
         aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
-        turnCounter+=1;
+        turnCounter += 1;
     }
+    
     if (nemico.hp > 0) {
         gameState.fase = "TURNO_NEMICO";
-        // Aspettiamo un po' prima che il nemico reagisca
         await aspetta(1500);
         await turnoNemico();
     } else {
@@ -140,21 +234,22 @@ async function attaccoSpeciale(){
         aggiungiLog("🏆 Il nemico è stato sconfitto!");
     }
 }
-function turnoNemico(){
-    if(gameState!=="TURNO_NEMICO") return;
-    setTimeout(attaccoNemico(),1500);
-}
+
 async function turnoNemico() {
-    // Non serve setTimeout, usiamo await aspetta
-    if(gameState.pausa) return;
+    if(giocoInPausa) return;
+    
     aggiungiLog(`🎲 ${nemico.nome} si prepara ad attaccare...`);
     await aspetta(1200);
-    let dannoTurnoNemico=nemico.attacco;
-    dannoTurnoNemico-=giocatore.armatura.difesa;
+    
+    let dannoTurnoNemico = nemico.attacco;
+    dannoTurnoNemico -= giocatore.armatura.difesa;
+    
     if (typeof giocatore.armatura.abilita_passiva === "function") {
         dannoTurnoNemico -= giocatore.armatura.abilita_passiva();
     }
-    if(dannoTurnoNemico<0) dannoTurnoNemico=0;
+    
+    if(dannoTurnoNemico < 0) dannoTurnoNemico = 0;
+    
     giocatore.hp -= dannoTurnoNemico;
     if (giocatore.hp < 0) giocatore.hp = 0;
     
@@ -172,24 +267,34 @@ async function turnoNemico() {
         aggiungiLog("🛡️ È il tuo turno!");
     }
 }
+
+// --- GESTIONE SCHERMATE E MENU ---
+
 function mostraGameOver(){
-    const screen=document.getElementById("game-over-screen");
+    const screen = document.getElementById("game-over-screen");
     screen.classList.remove("hidden");
 }
+
 function restartGame(){
     location.reload();
 }
+
 function quitGame(){
     window.close();
 }
+
 function aggiungiLog(messaggio) {
     const log = document.getElementById("battle-log");
     const li = document.createElement("li");
     li.innerText = messaggio;
-    log.insertBefore(li, log.firstChild);
-    log.scrollBottom = log.scrollHeight;
+    
+    // Aggiunge in fondo alla lista
+    log.appendChild(li);
+    
+    // Autoscroll verso il basso per vedere l'ultimo messaggio
+    log.scrollTop = log.scrollHeight;
 }
-// Funzione per aprire/chiudere il menu
+
 function toggleOptions() {
     const menu = document.getElementById("options-menu");
     if (!menu) {
@@ -200,51 +305,43 @@ function toggleOptions() {
     giocoInPausa = menu.classList.contains("visible");
 }
 
+// --- EVENT LISTENERS E DESCRITTORI OGGETTI ---
 
 const weaponImg = document.getElementById("weapon-sprite-img");
-const armorImg=document.getElementById("armor-sprite-img");
+const armorImg = document.getElementById("armor-sprite-img");
 const descBox = document.getElementById("item-description");
+
 weaponImg.onclick = () => {
     const descName = document.getElementById("desc-name");
     const descText = document.getElementById("desc-text");
-    // Prendiamo l'arma corrente del giocatore
     const arma = giocatore.arma;
 
-    // Riempiamo il box
     descName.innerText = arma.nome;
-    
-    descText.innerText=arma.descrizione;
-
-    // Mostriamo il box (se era nascosto, lo mostra; se era visibile, lo nasconde)
+    descText.innerText = arma.descrizione;
     descBox.classList.toggle("hidden");
 };
-armorImg.onclick=()=>{
+
+armorImg.onclick = () => {
     const descName = document.getElementById("desc-name");
     const descText = document.getElementById("desc-text");
-    // Prendiamo l'arma corrente del giocatore
     const armatura = giocatore.armatura;
 
-    // Riempiamo il box
     descName.innerText = armatura.nome;
-    
-    descText.innerText=armatura.descrizione;
-
-    // Mostriamo il box (se era nascosto, lo mostra; se era visibile, lo nasconde)
+    descText.innerText = armatura.descrizione;
     descBox.classList.toggle("hidden");
-}
+};
+
 window.onclick = (event) => {
-    if (event.target !== weaponImg && !descBox.contains(event.target)&&event.target !== armorImg) {
+    if (event.target !== weaponImg && !descBox.contains(event.target) && event.target !== armorImg) {
         descBox.classList.add("hidden");
     }
 };
-// Ascolta la tastiera
+
 window.addEventListener('keydown', (event) => {
-    console.log("Tasto premuto:", event.key);
     if (event.key === "Escape") {
-        // Se siamo nel menu principale magari non vogliamo aprirlo, 
-        // ma in battaglia o esplorazione sì.
         toggleOptions();
     }
 });
-// Inizializza l'app
+
+// Inizializza la UI all'avvio
 aggiornaUI();

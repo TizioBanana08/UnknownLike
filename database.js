@@ -6,6 +6,7 @@ const database={
             nome: "Spada",
             atk:15,
             sprite:"assets/sword.png",
+            rarita:"comune",
             //abilità passiva bleed:ogni attacco aggiungerà 1 di danno 
             abilita_passiva(){
                 return danno_aggiuntivo=1;
@@ -20,6 +21,7 @@ const database={
             nome: "Arco",
             atk:5,
             sprite:"assets/bow.png",
+            rarita:"comune",
             //abilità passiva multishot: spara un numero compreso tra 1 e 4 frecce ad attacco
             abilita_passiva(){
                 const n = Math.floor(Math.random() * 4) + 1; // 1-4 frecce
@@ -33,6 +35,7 @@ const database={
             nome: "Ascia",
             atk:15,
             sprite:"assets/axe.png",
+            rarita:"comune",
             //abilità passiva crit chance: ogni attacco ha una possibiltà del 20% di infliggere il doppio del danno
             abilita_passiva(){      
                 chance = controllaSuccesso(20);
@@ -50,6 +53,7 @@ const database={
             nome: "Tirapugni",
             atk:10,
             sprite:"assets/brass_knuckles.png",
+            rarita:"comune",
             //abilità passiva doppio colpo: ogni attacco colpisci due volte
             abilita_passiva(){
                 return this.atk*2;
@@ -61,6 +65,7 @@ const database={
             nome:"Lancia",
             atk:15,
             sprite:"assets/spear.png",
+            rarita:"comune",
             //abilità passiva doppio affondo: ogni attacco ha una possibilità del 20% di fare un secondo attacco al nemico che infligge 5 danni in più 
             abilita_passiva(){
                 chance = controllaSuccesso(20);
