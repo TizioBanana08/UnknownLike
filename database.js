@@ -72,7 +72,29 @@ const database={
                 }
             },
             descrizione:"Un'arma dalla lunga gittata, attenzione ai suoi potenti affondi!",
-        }
+        },
+
+        spadaFuoco:{
+            nome:"Spada di fuoco",
+            atk:20,
+            descrizione:"Una spada forgiata nelle fiamme dell'inferno pronta incenerire i tuoi nemici!",
+            abilita_passiva(){
+                return danno_aggiuntivo=1;
+            },
+            //abilità attiva:spara una palla di fuoco che infligge 30 danni e ha una chance del 20% di bruciare(al momento infliggere 5 danni in più)
+            abilita_attiva(){
+                chance=generaRandom();
+                if(chance){
+                    aggiungiLog("🔥Hai lanciato una palla di fuoco che brucia il nemico!");
+                    return 35;
+                }else{
+                    aggiungiLog("🔥Hai lanciato una palla di fuoco");
+                    return 30;
+                }
+            }
+        },
+
+        
     },
     //a differenza delle armi le armature avranno passive diverse senza abilità attive
     armature:{
