@@ -221,6 +221,11 @@ async function attaccoGiocatore() {
         aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
     }
 
+
+    let danniStato=checkStatus(giocatore.stato);
+    giocatore.hp-=danniStato;
+    aggiornaUI();
+
     if (nemico.hp > 0) {
         gameState.fase = "TURNO_NEMICO";
         await aspetta(1500);
@@ -301,6 +306,9 @@ async function turnoNemico() {
     
     aggiornaUI();
     aggiungiLog(`💥 ${nemico.nome} ti colpisce per ${dannoTurnoNemico} danni!`);
+    let danniStato=checkStatus(nemico.stato);
+    nemico.hp-=danniStato;
+    aggiornaUI();
 
     if (giocatore.hp <= 0) {
         gameState.fase = "GAME_OVER";
@@ -357,11 +365,13 @@ function toggleOptions() {
     }
 }
 
-function checkStatus(){
-    if(giocatore.stato==null){
-        giocatore.hp=giocatore.hp;
-    }else if(giocatore.stato=="burn"){
-        giocatore.hp-=3;
+function checkStatus(stato){
+    if(stato==null){
+        return danni=0;
+    }else if(stato=="burn"){
+        aggiungiLog("danno da bruciatura!")
+        return danno=8;
+
     }
 }
 // --- EVENT LISTENERS E DESCRITTORI OGGETTI ---
