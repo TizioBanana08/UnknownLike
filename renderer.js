@@ -208,8 +208,7 @@ async function attaccoGiocatore() {
         turnCounter += 1;
         aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
     }
-
-
+    nemico.stato=setStatus(giocatore.arma.tipo);
     let danniStato=checkStatus(giocatore.stato);
     giocatore.hp-=danniStato;
     aggiornaUI();
@@ -362,6 +361,21 @@ function checkStatus(stato){
 
     }
 }
+
+function setStatus(tipo){
+    if(tipo==="normale"){
+        return null;
+    }else if(tipo==="fuoco"){
+        if(controllaSuccesso(50)){
+            aggiungiLog("bruciatura applicata!");
+            return "burn";
+        }
+            
+        }else{
+            return null;
+        }
+    }
+
 // --- EVENT LISTENERS E DESCRITTORI OGGETTI ---
 
 const weaponImg = document.getElementById("weapon-sprite-img");
@@ -399,6 +413,8 @@ window.addEventListener('keydown', (event) => {
         toggleOptions();
     }
 });
-
+function controllaSuccesso(percentuale) {
+    return Math.random() * 100 < percentuale;
+}
 // Inizializza la UI all'avvio
 aggiornaUI();

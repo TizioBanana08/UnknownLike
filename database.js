@@ -7,6 +7,7 @@ const database={
             atk:15,
             sprite:"assets/sword.png",
             rarita:"comune",
+            tipo:"normale",
             //abilità passiva bleed:ogni attacco aggiungerà 1 di danno 
             abilita_passiva(){
                 return danno_aggiuntivo=1;
@@ -22,6 +23,8 @@ const database={
             atk:5,
             sprite:"assets/bow.png",
             rarita:"comune",
+            tipo:"normale",
+
             //abilità passiva multishot: spara un numero compreso tra 1 e 4 frecce ad attacco
             abilita_passiva(){
                 const n = Math.floor(Math.random() * 4) + 1; // 1-4 frecce
@@ -36,6 +39,8 @@ const database={
             atk:15,
             sprite:"assets/axe.png",
             rarita:"comune",
+            tipo:"normale",
+
             //abilità passiva crit chance: ogni attacco ha una possibiltà del 20% di infliggere il doppio del danno
             abilita_passiva(){      
                 chance = controllaSuccesso(20);
@@ -54,6 +59,7 @@ const database={
             atk:10,
             sprite:"assets/brass_knuckles.png",
             rarita:"comune",
+            tipo:"normale",
             //abilità passiva doppio colpo: ogni attacco colpisci due volte
             abilita_passiva(){
                 return this.atk*2;
@@ -66,6 +72,7 @@ const database={
             atk:15,
             sprite:"assets/spear.png",
             rarita:"comune",
+            tipo:"normale",
             //abilità passiva doppio affondo: ogni attacco ha una possibilità del 20% di fare un secondo attacco al nemico che infligge 5 danni in più 
             abilita_passiva(){
                 chance = controllaSuccesso(20);
@@ -83,20 +90,16 @@ const database={
             nome:"Spada di fuoco",
             atk:20,
             descrizione:"Una spada forgiata nelle fiamme dell'inferno pronta incenerire i tuoi nemici!",
+            tipo:"fuoco",
+            rarita:"comune",
             abilita_passiva(){
                 return danno_aggiuntivo=this.atk+1;
             },
-            //abilità attiva:spara una palla di fuoco che infligge 30 danni e ha una chance del 20% di bruciare(al momento infliggere 5 danni in più)
+            //abilità attiva:spara una palla di fuoco che infligge 30 danni 
             abilita_attiva(){
-                chance=controllaSuccesso(20);
-                if(chance){
-                    aggiungiLog("🔥Hai lanciato una palla di fuoco che brucia il nemico!");
-                    return 30;
-                }else{
-                    aggiungiLog("🔥Hai lanciato una palla di fuoco");
-                    return 30;
-                }
-            }
+                aggiungiLog("🔥Hai lanciato una palla di fuoco!");
+                return 30;
+            },
         },
 
         
