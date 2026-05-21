@@ -294,17 +294,25 @@ li{
 }
 .description-box {
     position: fixed;
-    bottom: 20px;
+    /* Posizioniamo l'angolo in alto a sinistra esattamente al centro dello schermo */
+    top: 50%; 
     left: 50%;
-    transform: translateX(-50%);
-    background: #f4e4bc; /* Colore pergamena */
+    
+    /* Spostiamo il box indietro del 50% della sua stessa larghezza e altezza */
+    /* Questo lo centra perfettamente rispetto al suo centro, non all'angolo */
+    transform: translate(-50%, -50%);
+    
+    background: #f4e4bc; /* Il tuo colore pergamena */
     border: 4px solid #5d4037;
-    padding: 15px;
+    padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    z-index: 100;
-    width: 300px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.7); /* Ombra più marcata per farlo "staccare" */
+    z-index: 2000; /* Assicurati che sia sopra TUTTO, anche sopra i bottoni */
+    
+    width: 350px; /* Leggermente più largo per la leggibilità */
     text-align: center;
+    pointer-events: none; /* Importante: così non blocca i click se appare sopra un tasto */
+    transition: opacity 0.2s ease-in-out;
 }
 .hidden {
     display: none !important; /* Nasconde il box inizialmente */
