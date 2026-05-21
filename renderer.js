@@ -239,8 +239,13 @@ async function attaccoGiocatore() {
 async function attaccoSpeciale(){
     if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0 || giocoInPausa) return;
     
-    let dannoTurno = 0;
     
+
+    if (typeof giocatore.arma.abilita_attiva !== "function") {
+        aggiungiLog(`❌ La tua arma (${giocatore.arma.nome}) non ha un'abilità speciale!`);
+        return; // Blocchiamo qui, non fa sprecare il turno
+    }
+    let dannoTurno = 0;
     // Calcoliamo quanti turni sono passati dall'ultimo utilizzo (o dall'inizio del gioco)
     let turniPassati = turnCounter - ultimoTurnoSpeciale;
     
