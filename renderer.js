@@ -332,7 +332,22 @@ async function turnoNemico() {
     aggiornaUI();
     aggiungiLog(`💥 ${nemico.nome} ti colpisce per ${dannoTurnoNemico} danni!`);
     let danniStato=checkStatus(nemico.stato);
-    nemico.hp-=danniStato;
+    if (danniStato > 0) {
+        nemico.hp -= danniStato;
+        
+        // 1. Impediamo alla vita di andare in negativo
+        if (nemico.hp < 0) nemico.hp = 0; 
+        aggiornaUI();
+
+        // 2. Controlliamo se la bruciatura lo ha ucciso
+        if (nemico.hp <= 0) {
+            gameState.fase = "VITTORIA";
+            aggiungiLog(`🏆 ${nemico.nome} crolla a terra per la bruciatura!`);
+            await aspetta(1500);
+            await avanzaAlProssimoStage();
+            return; // CRUCIALE: Ferma la funzione qui ed evita di passarti il turno a vuoto!
+        }
+    }
     aggiornaUI();
 
     if (giocatore.hp <= 0) {
