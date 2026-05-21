@@ -142,6 +142,20 @@ function aggiornaUI() {
         cambiaColoreHealthBar(percentualeVitaP, "p-health-bar");
         cambiaColoreHealthBar(percentualeVitaE, "e-health-bar");
         displayInfoTurn();
+        const btnSpeciale = document.getElementById("special-atk-button");
+        if (btnSpeciale && giocatore && giocatore.arma) {
+            let turniPassati = turnCounter - ultimoTurnoSpeciale;
+            let hasAbilita = typeof giocatore.arma.abilita_attiva === "function";
+
+        // Se l'arma ha un'abilità E sono passati almeno 5 turni
+            if (hasAbilita && turniPassati >= 5) {
+                btnSpeciale.classList.add("special-ready");
+    
+            } else {
+                btnSpeciale.classList.remove("special-ready");
+        
+            }   
+    }
     } catch (error) {
         console.error("Errore durante l'aggiornamento della UI:", error);
     }
