@@ -5,6 +5,7 @@ var stageCounter=1;
 var worldCounter=1;
 let giocoInPausa = false;
 let ultimoTurnoSpeciale = 0;
+const STAGE_PER_MONDO = 4;
 // --- GESTIONE MENU E SCELTA ARMI ---
 
 function startGame() {
@@ -232,6 +233,7 @@ async function attaccoGiocatore() {
     } else {
         gameState.fase = "VITTORIA";
         aggiungiLog("🏆 Il nemico è stato sconfitto!");
+        await avanzaAlProssimoStage();
     }
 }
 
@@ -282,12 +284,31 @@ async function attaccoSpeciale(){
     } else {
         gameState.fase = "VITTORIA";
         aggiungiLog("🏆 Il nemico è stato sconfitto!");
+        await avanzaAlProssimoStage();
     }
 }
 
 async function turnoNemico() {
     while (giocoInPausa) {
         await aspetta(200); // Aspetta 0.2 secondi e poi ricontrolla
+    }
+    // --- 1. GESTIONE STATI ALTERATI ---
+    let dannoDaStato = checkStatus(nemico.stato);
+    if (dannoDaStato > 0) {
+        nemico.hp -= dannoDaStato;
+        if (nemico.hp < 0) nemico.hp = 0;
+        
+        aggiornaUI();
+        await aspetta(1000); // Diamo tempo al giocatore di leggere il log
+        
+        // IL FIX CRUCIALE: Controlliamo SE È MORTO per via dello stato
+        if (nemico.hp <= 0) {
+            gameState.fase = "VITTORIA";
+            aggiungiLog(`🏆 ${nemico.nome} è stato ridotto in cenere!`);
+            await aspetta(1500);
+            await avanzaAlProssimoStage();
+            return; // IMPORTANTE: questo blocca l'esecuzione del resto del turno nemico!
+        }
     }
     
     aggiungiLog(`🎲 ${nemico.nome} si prepara ad attaccare...`);
@@ -369,14 +390,14 @@ function toggleOptions() {
     }
 }
 
-function checkStatus(stato){
-    if(stato==null){
-        return danni=0;
-    }else if(stato=="burn"){
-        aggiungiLog("danno da bruciatura!")
-        return danno=8;
-
+function checkStatus(stato) {
+    if (!stato) { // check rapido per null, undefined o stringa vuota
+        return 0;
+    } else if (stato === "burn") {
+        aggiungiLog("🔥 Danno da bruciatura!");
+        return 8;
     }
+    return 0; // Se ha uno stato non riconosciuto, non fa danni
 }
 
 function setStatus(tipo){
@@ -432,6 +453,39 @@ window.addEventListener('keydown', (event) => {
 });
 function controllaSuccesso(percentuale) {
     return Math.random() * 100 < percentuale;
+}
+async function avanzaAlProssimoStage() {
+    stageCounter++; // Aumentiamo lo stage
+    let turniCaricati = turnCounter - ultimoTurnoSpeciale;
+    turnCounter = 1;
+    ultimoTurnoSpeciale = 1 - turniCaricati;
+    // Controlliamo se abbiamo superato gli stage massimi per questo mondo
+    if (stageCounter > STAGE_PER_MONDO) {
+        worldCounter++;
+        stageCounter = 1; // Resettiamo lo stage per il nuovo mondo
+        aggiungiLog(`🌍 BENVENUTO NEL MONDO ${worldCounter}! 🌍`);
+        await aspetta(2000);
+    } else {
+        aggiungiLog(`🚩 Avanzi allo Stage ${stageCounter}...`);
+        await aspetta(1500);
+    }
+
+    // --- GENERAZIONE NUOVO NEMICO ---
+    // Prende tutte le chiavi (i nomi) dei nemici dal tuo database
+    const chiaviNemici = Object.keys(db.nemici);
+    // Sceglie un nemico a caso
+    const nemicoCasuale = chiaviNemici[Math.floor(Math.random() * chiaviNemici.length)];
+    
+    // Assegna il nuovo nemico
+    nemico = { ...db.nemici[nemicoCasuale] };
+    nemico.maxHp = nemico.hp; // <-- FONDAMENTALE per non rompere la barra della vita!
+
+
+
+    // Ripartiamo!
+    gameState.fase = "TURNO_GIOCATORE";
+    aggiornaUI();
+    aggiungiLog(`⚠️ Un nuovo nemico appare: ${nemico.nome}! È il tuo turno.`);
 }
 // Inizializza la UI all'avvio
 aggiornaUI();
