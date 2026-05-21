@@ -110,6 +110,7 @@ function generaNemico(){
     const chiaviNemici = Object.keys(db.nemici);
     const chiaveCasuale = chiaviNemici[Math.floor(Math.random() * chiaviNemici.length)];
     const datiNemico = db.nemici[chiaveCasuale];
+    datiNemico.maxHp = datiNemico.hp;
     return datiNemico;
 }
 var nemico = generaNemico(); 
@@ -124,8 +125,7 @@ function aggiornaUI() {
     }
 
     try {
-        let percentualeVitaP = (giocatore.hp / giocatore.maxHp) * 100;
-        let percentualeVitaE = (nemico.hp / nemico.maxHp) * 100;
+        
 
         document.getElementById("p-sprite-img").src = giocatore.sprite;
         document.getElementById("e-sprite-img").src = nemico.sprite;
@@ -139,8 +139,8 @@ function aggiornaUI() {
         document.getElementById("p-weapon").innerText = giocatore.arma.nome;
         document.getElementById("e-atk").innerText = nemico.attacco;
 
-        cambiaColoreHealthBar(percentualeVitaP, "p-health-bar");
-        cambiaColoreHealthBar(percentualeVitaE, "e-health-bar");
+        cambiaColoreHealthBar(giocatore.hp,giocatore.maxHp, "p-health-bar");
+        cambiaColoreHealthBar(nemico.hp,nemico.maxHp, "e-health-bar");
         displayInfoTurn();
         const btnSpeciale = document.getElementById("special-atk-button");
         if (btnSpeciale && giocatore && giocatore.arma) {
@@ -161,19 +161,31 @@ function aggiornaUI() {
     }
 }
 
-function cambiaColoreHealthBar(vitaP, id){
+function cambiaColoreHealthBar(vitaAttuale, vitaMassima, id) {
     var progressBar = document.getElementById(id);
-    progressBar.style.width = vitaP + "%";
-    if(vitaP > 75){
-        progressBar.style.backgroundColor = "#01ad23";
-    } else if(vitaP <= 75 && vitaP > 50){
-        progressBar.style.backgroundColor = "#80c02b";
-    } else if(vitaP <= 50 && vitaP > 25){
-        progressBar.style.backgroundColor = "#ffd334";
-    } else if(vitaP <= 25 && vitaP > 10){
-        progressBar.style.backgroundColor = "#f18030";
-    } else if(vitaP <= 10){
-        progressBar.style.backgroundColor = "#e32f30";
+    if (!progressBar) return;
+
+    // 1. Calcoliamo la vera percentuale (da 0 a 100)
+    var percentuale = (vitaAttuale / vitaMassima) * 100;
+    
+    // 2. Limiti di sicurezza (evita che vada sotto lo 0% o sopra il 100%)
+    if (percentuale < 0) percentuale = 0;
+    if (percentuale > 100) percentuale = 100;
+
+    // 3. Modifichiamo la larghezza
+    progressBar.style.width = percentuale + "%";
+
+    // 4. Cambiamo il colore in base alla percentuale calcolata
+    if (percentuale > 75) {
+        progressBar.style.backgroundColor = "#01ad23"; // Verde scuro
+    } else if (percentuale > 50) {
+        progressBar.style.backgroundColor = "#80c02b"; // Verde chiaro
+    } else if (percentuale > 25) {
+        progressBar.style.backgroundColor = "#ffd334"; // Giallo
+    } else if (percentuale > 10) {
+        progressBar.style.backgroundColor = "#f18030"; // Arancione
+    } else {
+        progressBar.style.backgroundColor = "#e32f30"; // Rosso
     }
 }
 // --- LOGICA DI COMBATTIMENTO ---
@@ -226,8 +238,13 @@ async function attaccoGiocatore() {
 async function attaccoSpeciale(){
     if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0 || giocoInPausa) return;
     
-    let dannoTurno = 0;
     
+
+    if (typeof giocatore.arma.abilita_attiva !== "function") {
+        aggiungiLog(`❌ La tua arma (${giocatore.arma.nome}) non ha un'abilità speciale!`);
+        return; // Blocchiamo qui, non fa sprecare il turno
+    }
+    let dannoTurno = 0;
     // Calcoliamo quanti turni sono passati dall'ultimo utilizzo (o dall'inizio del gioco)
     let turniPassati = turnCounter - ultimoTurnoSpeciale;
     
