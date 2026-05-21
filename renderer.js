@@ -1,6 +1,8 @@
 const aspetta = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const db = require('./database.js');
 var turnCounter = 1;
+var stageCounter=1;
+var worldCounter=1;
 let giocoInPausa = false;
 let ultimoTurnoSpeciale = 0;
 // --- GESTIONE MENU E SCELTA ARMI ---
@@ -50,7 +52,13 @@ function preparaSceltaStarter() {
         `;
     });
 }
-
+function displayInfoTurn(){
+    const container=document.getElementById("count");
+    if (!container) return;
+    container.innerHTML=`<div class="info-container">
+                            <p>Turno: ${turnCounter} | Stage: ${stageCounter} | Mondo: ${worldCounter}</p>
+                        </div>`
+}
 function selezionaStarter(chiaveArma) {
     console.log("Arma scelta:", chiaveArma);
     giocatore.arma = db.armi[chiaveArma];
@@ -133,6 +141,7 @@ function aggiornaUI() {
 
         cambiaColoreHealthBar(percentualeVitaP, "p-health-bar");
         cambiaColoreHealthBar(percentualeVitaE, "e-health-bar");
+        displayInfoTurn();
     } catch (error) {
         console.error("Errore durante l'aggiornamento della UI:", error);
     }

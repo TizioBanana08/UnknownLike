@@ -512,3 +512,27 @@ li{
     background: #d4af37; /* Diventa dorato al passaggio del mouse */
     transform: scale(1.1);
 }
+/* Stile per il contenitore dei contatori */
+#count {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000; /* Assicura che sia sopra lo sfondo */
+}
+
+.info-counter {
+    background: rgba(230, 205, 164, 0.8); /* Beige semitrasparente */
+    border: 3px solid #ad7a59;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+}
+
+.info-counter p {
+    margin: 0;
+    color: #5d4037;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace; /* Stile un po' retro/terminale */
+    font-size: 1.1rem;
+    text-transform: uppercase;
+}
