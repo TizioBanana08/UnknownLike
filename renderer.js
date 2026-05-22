@@ -383,6 +383,7 @@ function mostraGameOver(){
 
 function restartGame(){
     location.reload();
+    startGame();
 }
 
 function quitGame(){

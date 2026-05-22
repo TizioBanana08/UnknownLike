@@ -364,7 +364,7 @@ li{
     gap: 20px;
     justify-content: center;
     margin-top: 30px;
-    color: white;
+    
 }
 
 .game-over-buttons button {
@@ -372,11 +372,12 @@ li{
     font-size: 1.2rem;
     background: #4a332d;
     border: 2px solid #ad7a59;
+    color: white;
 }
 
 .game-over-buttons button:hover {
-    background: #b71c1c;
-    border-color: white;
+    background: #f4e4bc;
+    border-color: #4a332d;
 }
 
 @keyframes fadeIn {
