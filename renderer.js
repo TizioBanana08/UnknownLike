@@ -131,7 +131,13 @@ function aggiornaUI() {
         document.getElementById("p-sprite-img").src = giocatore.sprite;
         document.getElementById("e-sprite-img").src = nemico.sprite;
         document.getElementById("weapon-sprite-img").src = giocatore.arma.sprite;
-        document.getElementById("armor-sprite-img").src = giocatore.armatura.sprite;
+        if(giocatore.armatura===null){
+            document.getElementById("armor-sprite-img").src="assets/no_item.png";
+        }
+        else{
+            document.getElementById("armor-sprite-img").src=giocatore.armatura.sprite;
+        }
+         
         
         document.getElementById("p-hp").innerText = giocatore.hp;
         document.getElementById("e-hp").innerText = nemico.hp;
@@ -318,9 +324,12 @@ async function turnoNemico() {
         await aspetta(200);
     }
     let dannoTurnoNemico = nemico.attacco;
-    dannoTurnoNemico -= giocatore.armatura.difesa;
+    if(giocatore.armatura!==null){      
+        dannoTurnoNemico -= giocatore.armatura.difesa;
+    }
     
-    if (typeof giocatore.armatura.abilita_passiva === "function") {
+    
+    if (giocatore.armatura!==null && typeof giocatore.armatura.abilita_passiva === "function") {
         dannoTurnoNemico -= giocatore.armatura.abilita_passiva();
     }
     
@@ -446,13 +455,16 @@ weaponImg.onclick = () => {
 };
 
 armorImg.onclick = () => {
-    const descName = document.getElementById("desc-name");
-    const descText = document.getElementById("desc-text");
-    const armatura = giocatore.armatura;
+    if(giocatore.armatura===null){
+        const descName = document.getElementById("desc-name");
+        const descText = document.getElementById("desc-text");
+        const armatura = giocatore.armatura;
 
-    descName.innerText = armatura.nome;
-    descText.innerText = armatura.descrizione;
-    descBox.classList.toggle("hidden");
+        descName.innerText = armatura.nome;
+        descText.innerText = armatura.descrizione;
+        descBox.classList.toggle("hidden");
+    }
+    
 };
 
 window.onclick = (event) => {

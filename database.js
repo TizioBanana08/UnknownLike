@@ -182,7 +182,7 @@ const database={
             hp: 100,
             maxHp: 100,
             arma: "tirapugni",
-            armatura:"armaturaMaglia",
+            armatura:null,
             stato:null,
             sprite: "assets/base_knight.png"
         },

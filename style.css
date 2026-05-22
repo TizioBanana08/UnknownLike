@@ -364,6 +364,7 @@ li{
     gap: 20px;
     justify-content: center;
     margin-top: 30px;
+    color: white;
 }
 
 .game-over-buttons button {
