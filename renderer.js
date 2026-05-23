@@ -381,9 +381,49 @@ function mostraGameOver(){
     screen.classList.remove("hidden");
 }
 
-function restartGame(){
-    location.reload();
-    startGame();
+function restartGame() {
+    // 1. Resettiamo le variabili globali
+    turnCounter = 1;
+    stageCounter = 1;
+    worldCounter = 1;
+    ultimoTurnoSpeciale = 0;
+    giocoInPausa = false;
+    gameState.fase = "TURNO_GIOCATORE";
+
+    // 2. Resettiamo la vita del giocatore al massimo
+    giocatore.hp = giocatore.maxHp;
+    giocatore.arma = null;
+    if (giocatore.stato) giocatore.stato = null; // Se avevi implementato gli stati sul giocatore
+
+    // 3. Generiamo un nuovo nemico iniziale
+    nemico = generaNemico();
+
+    // 4. Puliamo il log della battaglia
+    const log = document.getElementById("battle-log");
+    if (log) log.innerHTML = ""; 
+
+    // 5. Gestione delle schermate UI
+    const gameOverScreen = document.getElementById("game-over-screen");
+    const mainContainer = document.getElementById("main-container");
+    const weaponScreen = document.getElementById("weapon-selection-screen");
+
+    // Nascondiamo il Game Over e il Campo di Battaglia
+    if (gameOverScreen) gameOverScreen.classList.add("hidden");
+    if (mainContainer) {
+        mainContainer.classList.add("hidden");
+        mainContainer.style.setProperty("display", "none", "important");
+    }
+
+    // Preparo le nuove armi
+    preparaSceltaStarter();
+
+    // Mostriamo la schermata delle armi
+    if (weaponScreen) {
+        weaponScreen.classList.remove("hidden");
+        weaponScreen.classList.add("visible");
+        // Se nel tuo CSS usi display: flex per centrare le carte, mettilo qui:
+        weaponScreen.style.setProperty("display", "flex", "important"); 
+    }
 }
 
 function quitGame(){
