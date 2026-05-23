@@ -1,5 +1,7 @@
 const aspetta = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const db = require('./database.js');
+console.log("Dati caricati dal database:", db);
+const dbloot = require('./dbloot.js');
 var turnCounter = 1;
 var stageCounter=1;
 var worldCounter=1;
@@ -209,24 +211,57 @@ async function attaccoGiocatore() {
     gameState.animazioneInCorso = true; // 🔒 CHIUDIAMO IL LUCCHETTO
 
     try {
+        // Calcolo base del danno dell'arma
         let dannoTurno = 0;
         if (typeof giocatore.arma.abilita_passiva === "function") {
             dannoTurno = giocatore.arma.abilita_passiva();
         } else {
-            dannoTurno = giocatore.arma.atk;
+            dannoTurno = giocatore.arma.atk; // Assicurati che non si chiami 'danno' nel tuo db armi
         }
-        if(giocatore.arma.nome === "Spada"){
+
+        // ⚠️ Questi if andrebbero rimossi in futuro gestendo tutto tramite il database delle armi!
+        if (giocatore.arma.nome === "Spada") {
             dannoTurno = giocatore.arma.atk + 1;
         }
-        if(giocatore.arma.nome === "Lancia"){
+        if (giocatore.arma.nome === "Lancia") {
             dannoTurno = giocatore.arma.atk + dannoTurno;
         }
-        
+
+        // --- INIZIO SISTEMA DATA-DRIVEN PER I PASSIVI ---
+        let moltiplicatore = 1;
+        let dannoBonusFisso = 0;
+
+        giocatore.passivi.forEach(idPassivo => {
+            const oggetto = db.passivi[idPassivo];
+            
+            if (oggetto) {
+                // Cura
+                if (oggetto.tipoEffetto === "cura_inizio_turno") {
+                    giocatore.hp = Math.min(giocatore.maxHp, giocatore.hp + oggetto.valore);
+                    aggiungiLog(`✨ ${oggetto.nome} si attiva: +${oggetto.valore} HP!`);
+                }
+                // Potenziamento Attacco (% percentuale)
+                if (oggetto.tipoEffetto === "moltiplicatore_danno") {
+                    moltiplicatore *= oggetto.valore;
+                }
+                // Danno extra fisso
+                if (oggetto.tipoEffetto === "danno_piatto") {
+                    dannoBonusFisso += oggetto.valore;
+                }
+            }
+        });
+
+        // Applichiamo i bonus passivi al danno finale
+        dannoTurno = Math.floor((dannoTurno + dannoBonusFisso) * moltiplicatore);
+        // --- FINE SISTEMA PASSIVI ---
+
+        // Infliggiamo il danno al nemico
         nemico.hp -= dannoTurno;
         if (nemico.hp < 0) nemico.hp = 0;
         
         aggiornaUI();
 
+        // Log e contatori
         if (dannoTurno > giocatore.arma.atk) {
             turnCounter += 1;
             aggiungiLog(`✨ Effetto attivato! Danno totale: ${dannoTurno} HP`);
@@ -240,6 +275,7 @@ async function attaccoGiocatore() {
             nemico.stato = setStatus(giocatore.arma.tipo);
         }
         
+        // Danni da stato sul giocatore
         if (giocatore.stato) {
             let danniStato = checkStatus(giocatore.stato);
             if (danniStato > 0) {
@@ -253,15 +289,15 @@ async function attaccoGiocatore() {
         if (nemico.hp > 0) {
             gameState.fase = "TURNO_NEMICO";
             await aspetta(1500);
-            await turnoNemico(); // Il lucchetto verrà riaperto a fine turno nemico
+            await turnoNemico(); 
         } else {
             gameState.fase = "VITTORIA";
             aggiungiLog("🏆 Il nemico è stato sconfitto!");
-            await avanzaAlProssimoStage(); // Il lucchetto verrà riaperto nel prossimo stage
+            await avanzaAlProssimoStage(); 
         }
 
     } catch (errore) {
-        // 🚨 SBLOCCO DI EMERGENZA IN CASO DI CRASH SILENZIOSO
+        // 🚨 SBLOCCO DI EMERGENZA
         console.error("Errore critico durante l'attacco:", errore);
         gameState.animazioneInCorso = false; 
         gameState.fase = "TURNO_GIOCATORE";
@@ -283,6 +319,7 @@ async function attaccoSpeciale() {
         let dannoTurno = 0;
         let turniPassati = turnCounter - ultimoTurnoSpeciale;
         
+        // Calcola il danno base prima dei modificatori
         if (turniPassati >= 5) {
             dannoTurno = giocatore.arma.abilita_attiva();
             ultimoTurnoSpeciale = turnCounter; 
@@ -292,6 +329,34 @@ async function attaccoSpeciale() {
             dannoTurno = giocatore.arma.atk;
             aggiungiLog(`❌ Abilità scarica (aspetta ${turniMancanti} turni). Lanciato attacco base!`);
         }
+
+        // --- INIZIO SISTEMA DATA-DRIVEN PER I PASSIVI ---
+        let moltiplicatore = 1;
+        let dannoBonusFisso = 0;
+
+        giocatore.passivi.forEach(idPassivo => {
+            const oggetto = db.passivi[idPassivo]; // Recupera dal database usando la chiave
+            
+            if (oggetto) {
+                // Cura
+                if (oggetto.tipoEffetto === "cura_inizio_turno") {
+                    giocatore.hp = Math.min(giocatore.maxHp, giocatore.hp + oggetto.valore);
+                    aggiungiLog(`✨ ${oggetto.nome} si attiva: +${oggetto.valore} HP!`);
+                }
+                // Potenziamento Attacco (% percentuale)
+                if (oggetto.tipoEffetto === "moltiplicatore_danno") {
+                    moltiplicatore *= oggetto.valore;
+                }
+                // Danno extra fisso
+                if (oggetto.tipoEffetto === "danno_piatto") {
+                    dannoBonusFisso += oggetto.valore;
+                }
+            }
+        });
+
+        // Applichiamo i bonus passivi al danno finale dell'attacco speciale
+        dannoTurno = Math.floor((dannoTurno + dannoBonusFisso) * moltiplicatore);
+        // --- FINE SISTEMA PASSIVI ---
         
         nemico.hp -= dannoTurno;
         if (nemico.hp < 0) nemico.hp = 0;
@@ -538,11 +603,13 @@ async function avanzaAlProssimoStage() {
     
     // Controlliamo se abbiamo superato gli stage massimi per questo mondo
     if (stageCounter > STAGE_PER_MONDO) {
+        apriChest();
         worldCounter++;
         stageCounter = 1; // Resettiamo lo stage per il nuovo mondo
         aggiungiLog(`🌍 BENVENUTO NEL MONDO ${worldCounter}! 🌍`);
         await aspetta(2000);
     } else {
+       
         aggiungiLog(`🚩 Avanzi allo Stage ${stageCounter}...`);
         await aspetta(1500);
     }
@@ -676,6 +743,93 @@ async function usaCura(index) {
     
     await aspetta(1500); // Pausa drammatica
     await turnoNemico(); // Chiamata alla tua funzione di attacco del mostro
+}
+function calcolaDanno() {
+    let dannoBase = giocatore.arma.danno;
+    
+    const boost = giocatore.passivi.find(p => p.effetto === "boost_atk");
+    if (boost) {
+        dannoBase *= boost.valore; // Moltiplica per 1.2
+    }
+    
+    return Math.floor(dannoBase);
+}
+function apriChest() {
+    const screen = document.getElementById("chest-screen");
+    const lootName = document.getElementById("loot-name");
+    const lootDesc = document.getElementById("loot-desc");
+
+    let oggettoTrovato = null;
+    const r = Math.random();
+
+    // Peschiamo dal database
+    const arrayArmature = Object.values(db.armature || {});
+    const chiaviPassivi = Object.keys(db.passivi || {});
+    const chiaviCure = Object.keys(db.consumabili || {}); 
+
+    // 1. Logica Armatura
+    if (r < 0.3 && arrayArmature.length > 0) {
+        const raritaAttuale = giocatore.armatura ? giocatore.armatura.rarita : 0;
+        const armaturePossibili = arrayArmature.filter(a => a.rarita > raritaAttuale);
+        
+        if (armaturePossibili.length > 0) {
+            oggettoTrovato = armaturePossibili[0];
+            giocatore.armatura = oggettoTrovato;
+            aggiungiLog(`🛡️ Hai equipaggiato: ${oggettoTrovato.nome}!`);
+        }
+    } 
+    
+    // 2. Logica Passivi
+    if (!oggettoTrovato && r < 0.6 && chiaviPassivi.length > 0) {
+        const chiaviDisponibili = chiaviPassivi.filter(chiave => !giocatore.passivi.includes(chiave));
+        
+        if (chiaviDisponibili.length > 0) {
+            const chiaveScelta = chiaviDisponibili[Math.floor(Math.random() * chiaviDisponibili.length)];
+            giocatore.passivi.push(chiaveScelta); 
+            oggettoTrovato = db.passivi[chiaveScelta];
+            aggiungiLog(`💍 Nuovo passivo ottenuto: ${oggettoTrovato.nome}!`);
+        }
+    }
+
+    // 3. Logica Cura 
+    if (!oggettoTrovato && chiaviCure.length > 0) {
+        const idRandom = chiaviCure[Math.floor(Math.random() * chiaviCure.length)];
+        oggettoTrovato = db.consumabili[idRandom];
+        aggiungiAInventario(idRandom);
+        aggiungiLog(`🧪 Hai raccolto: ${oggettoTrovato.nome}!`);
+    }
+
+    // Default di sicurezza
+    if (!oggettoTrovato) {
+        oggettoTrovato = { nome: "Polvere Magica", desc: "Hai già svuotato questo mondo dai suoi tesori!" };
+        aggiungiLog(`✨ Trovi solo della Polvere Magica...`);
+    }
+
+    // 4. Mostra la schermata e aggiorna la UI
+    if (lootName && lootDesc) {
+        lootName.innerText = oggettoTrovato.nome;
+        lootDesc.innerText = oggettoTrovato.desc || "Un oggetto prezioso!";
+    }
+    
+    if (screen) screen.classList.add("visible");
+    aggiornaUI(); // Aggiorna cuori/statistiche a schermo
+}
+
+function aggiungiAInventario(idOggetto) {
+    // 1. Cerca se l'oggetto esiste già nell'inventario del giocatore
+    const slotEsistente = giocatore.inventario.find(slot => slot.id === idOggetto);
+
+    if (slotEsistente) {
+        // 2. Se lo hai già, aumenta semplicemente la quantità
+        slotEsistente.quantita += 1;
+    } else {
+        // 3. Se è la prima volta che lo trovi, crea un nuovo slot
+        giocatore.inventario.push({ id: idOggetto, quantita: 1 });
+    }
+}
+function prossimoLivello() {
+    document.getElementById("chest-screen").classList.remove("visible");
+    // Qui chiami la tua funzione per generare il nuovo mostro e resettare la battaglia
 }
 // Inizializza la UI all'avvio
 aggiornaUI();

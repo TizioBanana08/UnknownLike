@@ -196,6 +196,25 @@ const database={
             sprite: "assets/items/herb.png"
         }
     },
+    passivi: {
+    anello_vita: { 
+        nome: "Anello Rigenerante", 
+        tipoEffetto: "cura_inizio_turno", // Categoria dell'effetto
+        valore: 5                         // Quanto cura
+    },
+    ciondolo_forza: { 
+        nome: "Ciondolo Forza", 
+        tipoEffetto: "moltiplicatore_danno", 
+        valore: 1.2                       // +20%
+    },
+    spada_rotta: {
+        nome: "Lama Arrugginita",
+        tipoEffetto: "danno_piatto",
+        valore: 10                        // +10 danni fissi
+    }
+    },
+    
+        
     personaggi:{
         cavaliere:{
             nome:"Cavalier Pristol",
@@ -205,6 +224,7 @@ const database={
             armatura:null,
             stato:null,
             inventario:[],
+            passivi:[],
             sprite: "assets/base_knight.png"
         },
     },
