@@ -568,3 +568,44 @@ li{
     animation: glowSpeciale 1.5s infinite alternate !important;
     text-shadow: 0 0 5px white; /* Fa risaltare un po' il testo */
 }
+/* Rendiamo lo zaino identico alla selezione armi */
+#inventory-screen {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.85); /* Sfondo scuro per far risaltare lo zaino */
+    display: none; 
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 5000;
+}
+
+#inventory-screen.visible {
+    display: flex !important;
+}
+
+/* Regoliamo le card dello zaino se necessario */
+#inventory-list .weapon-card {
+    min-height: 300px;
+}
+/* Selettore specifico per il tasto di chiusura dello zaino */
+#inventory-screen .close-btn {
+    margin-top: 50px;       /* Crea spazio tra le card e il bottone */
+    padding: 15px 40px;      /* Lo rende più grande e cliccabile */
+    background-color: #e6cda4; 
+    color: #3e2723;
+    font-size: 1.2rem;
+    border: 3px solid #3e2723;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    display: block;          /* Assicura che si comporti come un blocco */
+    margin-left: auto;       /* Insieme a margin-right: auto lo centra */
+    margin-right: auto;
+}
+
+#inventory-screen .close-btn:hover {
+    background-color: #d32f2f;
+    transform: scale(1.1);
+}

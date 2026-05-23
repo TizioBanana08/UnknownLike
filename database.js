@@ -176,6 +176,26 @@ const database={
             sprite: "assets/skeleton.png",
         },
     },
+    consumabili: {
+        pozione_base: {
+            nome: "Pozione Rossa",
+            descrizione: "Una pozione comune. Cura 30 HP.",
+            cura: 30,
+            sprite: "assets/items/potion.png"
+        },
+        pane: {
+            nome: "Pane Casereccio",
+            descrizione: "Semplice ma nutriente. Cura 15 HP.",
+            cura: 15,
+            sprite: "assets/items/bread.png"
+        },
+        erba_magica: {
+            nome: "Erba Curativa",
+            descrizione: "Erba amara che rigenera 50 HP.",
+            cura: 50,
+            sprite: "assets/items/herb.png"
+        }
+    },
     personaggi:{
         cavaliere:{
             nome:"Cavalier Pristol",
@@ -184,6 +204,7 @@ const database={
             arma: "tirapugni",
             armatura:null,
             stato:null,
+            inventario:[],
             sprite: "assets/base_knight.png"
         },
     },

@@ -6,6 +6,7 @@ var worldCounter=1;
 let giocoInPausa = false;
 let ultimoTurnoSpeciale = 0;
 const STAGE_PER_MONDO = 4;
+const databaseCure=db.consumabili;
 // --- GESTIONE MENU E SCELTA ARMI ---
 
 function startGame() {
@@ -100,6 +101,10 @@ let gameState = {
 // Oggetto Player
 const giocatore = db.personaggi.cavaliere;
 giocatore.arma = null;
+giocatore.inventario = [
+    { id: "pozione_base", quantita: 2 },
+    { id: "pane", quantita: 5 }
+];
 if (typeof giocatore.armatura === 'string') {
     giocatore.armatura = db.armature[giocatore.armatura];
     giocatore.maxHp = giocatore.maxHp + giocatore.armatura.difesa;
@@ -551,6 +556,126 @@ async function avanzaAlProssimoStage() {
     aggiornaUI();
     gameState.animazioneInCorso = false;
     aggiungiLog(`⚠️ Un nuovo nemico appare: ${nemico.nome}! È il tuo turno.`);
+}
+async function usaDalInventario(index) {
+    if (gameState.fase !== "TURNO_GIOCATORE" || gameState.animazioneInCorso) return;
+
+    const slot = giocatore.inventario[index];
+    if (!slot || slot.quantita <= 0) return;
+
+    const datiOggetto = db.consumabili[slot.id];
+
+    // Controllo vita massima
+    if (giocatore.hp >= giocatore.maxHp) {
+        aggiungiLog("✨ Sei già al massimo della forma!");
+        return;
+    }
+
+    gameState.animazioneInCorso = true;
+
+    // Applichiamo la cura
+    giocatore.hp += datiOggetto.valore;
+    if (giocatore.hp > giocatore.maxHp) giocatore.hp = giocatore.maxHp;
+
+    // Riduciamo la quantità o rimuoviamo l'oggetto
+    slot.quantita -= 1;
+    if (slot.quantita <= 0) {
+        giocatore.inventario.splice(index, 1); // Rimuove lo slot se vuoto
+    }
+
+    aggiungiLog(`🧪 Hai usato ${datiOggetto.nome}! +${datiOggetto.valore} HP.`);
+    
+    aggiornaUI();
+    // Il tasto cura ora chiude anche il menu inventario se lo hai aperto
+    // toggleInventario(); 
+
+    // Passaggio turno
+    gameState.fase = "TURNO_NEMICO";
+    await aspetta(1500);
+    await turnoNemico();
+}
+// Sostituisci la tua vecchia funzione cura() con questa
+function cura() {
+    if (gameState.fase !== "TURNO_GIOCATORE" || gameState.animazioneInCorso) return;
+    toggleZaino();
+}
+
+function toggleZaino() {
+    const screen = document.getElementById("inventory-screen");
+    screen.classList.toggle("visible"); // Uso .visible come nel tuo CSS per la scelta armi
+
+    if (screen.classList.contains("visible")) {
+        mostraOggettiZaino();
+    }
+}
+
+function mostraOggettiZaino() {
+    const container = document.getElementById("inventory-list");
+    console.log("Tentativo di mostrare lo zaino..."); // LOG 1
+    
+    if (!container) {
+        console.error("ERRORE: Non trovo l'elemento inventory-list nell'HTML!");
+        return;
+    }
+
+    container.innerHTML = ""; 
+
+    console.log("Contenuto inventario:", giocatore.inventario); // LOG 2
+
+    if (giocatore.inventario.length === 0) {
+        container.innerHTML = "<h2 style='color:white;'>Zaino Vuoto</h2>";
+        return;
+    }
+
+    giocatore.inventario.forEach((slot, index) => {
+        const datiOggetto = databaseCure[slot.id];
+        console.log("Sto creando la card per:", datiOggetto.nome); // LOG 3
+        
+        container.innerHTML += `
+            <div class="weapon-card">
+                <h3>${datiOggetto.nome}</h3>
+                <p>Quantità: <strong>${slot.quantita}</strong></p>
+                <img src="${datiOggetto.sprite}" alt="${datiOggetto.nome}" style="width:80px; height:80px;">
+                <p>${datiOggetto.descrizione}</p>
+                <button onclick="usaCura(${index})">USA</button>
+            </div>
+        `;
+    });
+}
+async function usaCura(index) {
+    // 1. Controlli di sicurezza
+    if (gameState.fase !== "TURNO_GIOCATORE" || gameState.animazioneInCorso) return;
+
+    const slot = giocatore.inventario[index];
+    const dati = databaseCure[slot.id];
+
+    if (giocatore.hp >= giocatore.maxHp) {
+        aggiungiLog("✨ La tua salute è già al massimo!");
+        return;
+    }
+
+    // 2. Esecuzione Cura
+    gameState.animazioneInCorso = true; // Blocca i click
+    toggleZaino(); // Chiude lo schermo dello zaino
+
+    giocatore.hp += dati.cura;
+    if (giocatore.hp > giocatore.maxHp) giocatore.hp = giocatore.maxHp;
+
+    // Riduciamo la quantità o rimuoviamo lo slot
+    slot.quantita -= 1;
+    if (slot.quantita <= 0) {
+        giocatore.inventario.splice(index, 1);
+    }
+
+    aggiungiLog(`🧪 Hai usato ${dati.nome} e recuperato ${dati.cura} HP!`);
+    aggiornaUI(); // Funzione che aggiorna le barre della vita a schermo
+
+    // 3. FINE TURNO (Passaggio al nemico)
+    // Impostiamo la fase al nemico così il giocatore non può cliccare "Attacca"
+    gameState.fase = "TURNO_NEMICO";
+    
+    await aspetta(1500); // Pausa drammatica
+    await turnoNemico(); // Chiamata alla tua funzione di attacco del mostro
 }
 // Inizializza la UI all'avvio
 aggiornaUI();
