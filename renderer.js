@@ -110,7 +110,7 @@ if (typeof giocatore.armatura === 'string') {
 function generaNemico(){
     const chiaviNemici = Object.keys(db.nemici);
     const chiaveCasuale = chiaviNemici[Math.floor(Math.random() * chiaviNemici.length)];
-    const datiNemico = db.nemici[chiaveCasuale];
+    const datiNemico = {...db.nemici[chiaveCasuale]};
     datiNemico.maxHp = datiNemico.hp;
     return datiNemico;
 }
@@ -198,99 +198,117 @@ function cambiaColoreHealthBar(vitaAttuale, vitaMassima, id) {
 // --- LOGICA DI COMBATTIMENTO ---
 
 async function attaccoGiocatore() {
-    if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0 || giocoInPausa) return;
+    // 1. Controllo di sicurezza
+    if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0 || giocoInPausa || gameState.animazioneInCorso) return;
     
-    let dannoTurno = 0;
-    if (typeof giocatore.arma.abilita_passiva === "function") {
-        dannoTurno = giocatore.arma.abilita_passiva();
-    } else {
-        dannoTurno = giocatore.arma.atk;
-    }
-    if(giocatore.arma.nome==="Spada"){
-        dannoTurno=giocatore.arma.atk+1;
-    }
-    if(giocatore.arma.nome === "Lancia"){
-        dannoTurno = giocatore.arma.atk + dannoTurno;
-    }
-    
-    nemico.hp -= dannoTurno;
-    if (nemico.hp < 0) nemico.hp = 0;
-    
-    // Aggiorna UI subito per far vedere la barra che scende
-    aggiornaUI();
+    gameState.animazioneInCorso = true; // 🔒 CHIUDIAMO IL LUCCHETTO
 
-    if (dannoTurno > giocatore.arma.atk) {
-        turnCounter += 1;
-        aggiungiLog(`✨ Effetto attivato! Danno totale: ${dannoTurno} HP`);
-        aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
-    } else {
-        turnCounter += 1;
-        aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
-    }
-    nemico.stato=setStatus(giocatore.arma.tipo);
-    let danniStato=checkStatus(giocatore.stato);
-    giocatore.hp-=danniStato;
-    aggiornaUI();
+    try {
+        let dannoTurno = 0;
+        if (typeof giocatore.arma.abilita_passiva === "function") {
+            dannoTurno = giocatore.arma.abilita_passiva();
+        } else {
+            dannoTurno = giocatore.arma.atk;
+        }
+        if(giocatore.arma.nome === "Spada"){
+            dannoTurno = giocatore.arma.atk + 1;
+        }
+        if(giocatore.arma.nome === "Lancia"){
+            dannoTurno = giocatore.arma.atk + dannoTurno;
+        }
+        
+        nemico.hp -= dannoTurno;
+        if (nemico.hp < 0) nemico.hp = 0;
+        
+        aggiornaUI();
 
-    if (nemico.hp > 0) {
-        gameState.fase = "TURNO_NEMICO";
-        await aspetta(1500);
-        await turnoNemico();
-    } else {
-        gameState.fase = "VITTORIA";
-        aggiungiLog("🏆 Il nemico è stato sconfitto!");
-        await avanzaAlProssimoStage();
+        if (dannoTurno > giocatore.arma.atk) {
+            turnCounter += 1;
+            aggiungiLog(`✨ Effetto attivato! Danno totale: ${dannoTurno} HP`);
+        } else {
+            turnCounter += 1;
+        }
+        aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
+
+        // Gestione sicura dello status
+        if (giocatore.arma.tipo) {
+            nemico.stato = setStatus(giocatore.arma.tipo);
+        }
+        
+        if (giocatore.stato) {
+            let danniStato = checkStatus(giocatore.stato);
+            if (danniStato > 0) {
+                giocatore.hp -= danniStato;
+                aggiungiLog(`🔥 Subisci danni dal tuo stato!`);
+            }
+        }
+        aggiornaUI();
+
+        // 2. Passaggio del turno
+        if (nemico.hp > 0) {
+            gameState.fase = "TURNO_NEMICO";
+            await aspetta(1500);
+            await turnoNemico(); // Il lucchetto verrà riaperto a fine turno nemico
+        } else {
+            gameState.fase = "VITTORIA";
+            aggiungiLog("🏆 Il nemico è stato sconfitto!");
+            await avanzaAlProssimoStage(); // Il lucchetto verrà riaperto nel prossimo stage
+        }
+
+    } catch (errore) {
+        // 🚨 SBLOCCO DI EMERGENZA IN CASO DI CRASH SILENZIOSO
+        console.error("Errore critico durante l'attacco:", errore);
+        gameState.animazioneInCorso = false; 
+        gameState.fase = "TURNO_GIOCATORE";
+        aggiungiLog("❌ Errore interno, ma i tasti sono stati sbloccati.");
     }
 }
 
-async function attaccoSpeciale(){
-    if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0 || giocoInPausa) return;
+async function attaccoSpeciale() {
+    if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0 || giocoInPausa || gameState.animazioneInCorso) return;
     
-    
-
     if (typeof giocatore.arma.abilita_attiva !== "function") {
         aggiungiLog(`❌ La tua arma (${giocatore.arma.nome}) non ha un'abilità speciale!`);
-        return; // Blocchiamo qui, non fa sprecare il turno
+        return; 
     }
-    let dannoTurno = 0;
-    // Calcoliamo quanti turni sono passati dall'ultimo utilizzo (o dall'inizio del gioco)
-    let turniPassati = turnCounter - ultimoTurnoSpeciale;
     
-    // INVECE DEL MODULO % 5, CONTROLLIAMO SE SONO PASSATI ALMENO 5 TURNI
-    if (typeof giocatore.arma.abilita_attiva === "function" && turniPassati >= 5) {
-        dannoTurno = giocatore.arma.abilita_attiva();
+    gameState.animazioneInCorso = true; // 🔒
+
+    try {
+        let dannoTurno = 0;
+        let turniPassati = turnCounter - ultimoTurnoSpeciale;
         
-        // Aggiorniamo il contatore: l'abbiamo appena usata in questo turno!
-        ultimoTurnoSpeciale = turnCounter; 
-    } else {
-        dannoTurno = giocatore.arma.atk;
-    }
-    
-    nemico.hp -= dannoTurno;
-    if (nemico.hp < 0) nemico.hp = 0;
-    
-    aggiornaUI();
-    
-    if (dannoTurno > giocatore.arma.atk) {
-        aggiungiLog(`✨ Attacco speciale attivato! Danno totale: ${dannoTurno} HP`);
+        if (turniPassati >= 5) {
+            dannoTurno = giocatore.arma.abilita_attiva();
+            ultimoTurnoSpeciale = turnCounter; 
+            aggiungiLog(`✨ Attacco speciale attivato!`);
+        } else {
+            let turniMancanti = 5 - turniPassati;
+            dannoTurno = giocatore.arma.atk;
+            aggiungiLog(`❌ Abilità scarica (aspetta ${turniMancanti} turni). Lanciato attacco base!`);
+        }
+        
+        nemico.hp -= dannoTurno;
+        if (nemico.hp < 0) nemico.hp = 0;
         aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
         turnCounter += 1;
-    } else {
-        // Calcolo corretto dei turni mancanti
-        let turniMancanti = 5 - turniPassati;
-        aggiungiLog(`❌ Impossibile usare l'abilità speciale, aspetta ${turniMancanti} turni. Attacco base lanciato!`);
-        aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
-        turnCounter += 1;
-    }
-    
-    if (nemico.hp > 0) {
-        gameState.fase = "TURNO_NEMICO";
-        await aspetta(1500);
-        await turnoNemico();
-    } else {
-        gameState.fase = "VITTORIA";
-        aggiungiLog("🏆 Il nemico è stato sconfitto!");
-        await avanzaAlProssimoStage();
+        aggiornaUI();
+        
+        if (nemico.hp > 0) {
+            gameState.fase = "TURNO_NEMICO";
+            await aspetta(1500);
+            await turnoNemico();
+        } else {
+            gameState.fase = "VITTORIA";
+            aggiungiLog("🏆 Il nemico è stato sconfitto!");
+            await avanzaAlProssimoStage();
+        }
+
+    } catch (errore) {
+        console.error("Errore critico durante l'attacco speciale:", errore);
+        gameState.animazioneInCorso = false; 
+        gameState.fase = "TURNO_GIOCATORE";
+        aggiungiLog("❌ Errore interno, ma i tasti sono stati sbloccati.");
     }
 }
 
@@ -340,23 +358,6 @@ async function turnoNemico() {
     
     aggiornaUI();
     aggiungiLog(`💥 ${nemico.nome} ti colpisce per ${dannoTurnoNemico} danni!`);
-    let danniStato=checkStatus(nemico.stato);
-    if (danniStato > 0) {
-        nemico.hp -= danniStato;
-        
-        // 1. Impediamo alla vita di andare in negativo
-        if (nemico.hp < 0) nemico.hp = 0; 
-        aggiornaUI();
-
-        // 2. Controlliamo se la bruciatura lo ha ucciso
-        if (nemico.hp <= 0) {
-            gameState.fase = "VITTORIA";
-            aggiungiLog(`🏆 ${nemico.nome} crolla a terra per la bruciatura!`);
-            await aspetta(1500);
-            await avanzaAlProssimoStage();
-            return; // CRUCIALE: Ferma la funzione qui ed evita di passarti il turno a vuoto!
-        }
-    }
     aggiornaUI();
 
     if (giocatore.hp <= 0) {
@@ -370,6 +371,7 @@ async function turnoNemico() {
             await aspetta(200);
         }
         gameState.fase = "TURNO_GIOCATORE";
+        gameState.animazioneInCorso = false;
         aggiungiLog("🛡️ È il tuo turno!");
     }
 }
@@ -389,6 +391,7 @@ function restartGame() {
     ultimoTurnoSpeciale = 0;
     giocoInPausa = false;
     gameState.fase = "TURNO_GIOCATORE";
+    gameState.animazioneInCorso = false;
 
     // 2. Resettiamo la vita del giocatore al massimo
     giocatore.hp = giocatore.maxHp;
@@ -527,6 +530,7 @@ async function avanzaAlProssimoStage() {
     let turniCaricati = turnCounter - ultimoTurnoSpeciale;
     turnCounter = 1;
     ultimoTurnoSpeciale = 1 - turniCaricati;
+    
     // Controlliamo se abbiamo superato gli stage massimi per questo mondo
     if (stageCounter > STAGE_PER_MONDO) {
         worldCounter++;
@@ -539,20 +543,13 @@ async function avanzaAlProssimoStage() {
     }
 
     // --- GENERAZIONE NUOVO NEMICO ---
-    // Prende tutte le chiavi (i nomi) dei nemici dal tuo database
-    const chiaviNemici = Object.keys(db.nemici);
-    // Sceglie un nemico a caso
-    const nemicoCasuale = chiaviNemici[Math.floor(Math.random() * chiaviNemici.length)];
-    
-    // Assegna il nuovo nemico
-    nemico = { ...db.nemici[nemicoCasuale] };
-    nemico.maxHp = nemico.hp; // <-- FONDAMENTALE per non rompere la barra della vita!
-
-
+    // Adesso usiamo la funzione centralizzata che crea cloni perfetti
+    nemico = generaNemico(); 
 
     // Ripartiamo!
     gameState.fase = "TURNO_GIOCATORE";
     aggiornaUI();
+    gameState.animazioneInCorso = false;
     aggiungiLog(`⚠️ Un nuovo nemico appare: ${nemico.nome}! È il tuo turno.`);
 }
 // Inizializza la UI all'avvio
