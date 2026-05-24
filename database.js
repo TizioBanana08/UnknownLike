@@ -153,17 +153,17 @@ const database={
     nemici:{
         slime: { 
             nome: "Slime", 
-            hp: 40, 
-            maxHp:40, 
+            hp: 20, 
+            maxHp:20, 
             attacco: 5, 
             stato:null,
             sprite: "assets/slime.png"
         },
         goblin: { 
             nome: "Goblin", 
-            hp: 120, 
+            hp: 80, 
             maxHp:80, 
-            attacco: 12, 
+            attacco: 8, 
             stato:null,
             sprite: "assets/goblin.png"
         },
