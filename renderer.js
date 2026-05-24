@@ -1,7 +1,6 @@
 const aspetta = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const db = require('./database.js');
 console.log("Dati caricati dal database:", db);
-const dbloot = require('./dbloot.js');
 var turnCounter = 1;
 var stageCounter=1;
 var worldCounter=1;
