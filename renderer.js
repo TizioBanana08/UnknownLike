@@ -713,7 +713,7 @@ async function usaCura(index) {
     if (gameState.fase !== "TURNO_GIOCATORE" || gameState.animazioneInCorso) return;
 
     const slot = giocatore.inventario[index];
-    const dati = databaseCure[slot.id];
+    const dati = databaseCure[slot.id]; // (Assicurati che corrisponda al tuo database, magari è db.consumabili)
 
     if (giocatore.hp >= giocatore.maxHp) {
         aggiungiLog("✨ La tua salute è già al massimo!");
@@ -721,7 +721,7 @@ async function usaCura(index) {
     }
 
     // 2. Esecuzione Cura
-    gameState.animazioneInCorso = true; // Blocca i click
+    gameState.animazioneInCorso = true; // Blocca i click temporaneamente
     toggleZaino(); // Chiude lo schermo dello zaino
 
     giocatore.hp += dati.cura;
@@ -733,15 +733,14 @@ async function usaCura(index) {
         giocatore.inventario.splice(index, 1);
     }
 
-    aggiungiLog(`🧪 Hai usato ${dati.nome} e recuperato ${dati.cura} HP!`);
-    aggiornaUI(); // Funzione che aggiorna le barre della vita a schermo
+    aggiungiLog(`🧪 Hai usato ${dati.nome} e recuperato ${dati.cura} HP! (Azione rapida)`);
+    aggiornaUI(); // Aggiorna le barre della vita a schermo
 
-    // 3. FINE TURNO (Passaggio al nemico)
-    // Impostiamo la fase al nemico così il giocatore non può cliccare "Attacca"
-    gameState.fase = "TURNO_NEMICO";
+    // 3. MANTIENI IL TURNO
+    await aspetta(500); // Piccola pausa giusto per far leggere il messaggio a schermo
     
-    await aspetta(1500); // Pausa drammatica
-    await turnoNemico(); // Chiamata alla tua funzione di attacco del mostro
+    // Riapriamo il lucchetto! La fase è ancora "TURNO_GIOCATORE", quindi ora puoi cliccare "Attacca"
+    gameState.animazioneInCorso = false; 
 }
 function calcolaDanno() {
     let dannoBase = giocatore.arma.danno;
