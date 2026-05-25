@@ -378,6 +378,7 @@ li{
 .game-over-buttons button:hover {
     background: #f4e4bc;
     border-color: #4a332d;
+    color: #4a332d;
 }
 
 @keyframes fadeIn {
