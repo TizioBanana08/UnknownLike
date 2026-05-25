@@ -138,7 +138,7 @@ function aggiornaUI() {
         document.getElementById("e-sprite-img").src = nemico.sprite;
         document.getElementById("weapon-sprite-img").src = giocatore.arma.sprite;
         if(giocatore.armatura===null){
-            document.getElementById("armor-sprite-img").src="assets/no_item.png";
+            document.getElementById("armor-sprite-img").src="assets/other/no_item.png";
         }
         else{
             document.getElementById("armor-sprite-img").src=giocatore.armatura.sprite;

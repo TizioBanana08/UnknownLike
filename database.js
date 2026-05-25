@@ -5,7 +5,7 @@ const database={
         spada:{
             nome: "Spada",
             atk:15,
-            sprite:"assets/sword.png",
+            sprite:"assets/weapons/sword.png",
             rarita:"comune",
             tipo:"normale",
             //abilità passiva bleed:ogni attacco aggiungerà 1 di danno 
@@ -21,7 +21,7 @@ const database={
         arco:{
             nome: "Arco",
             atk:5,
-            sprite:"assets/bow.png",
+            sprite:"assets/weapons/bow.png",
             rarita:"comune",
             tipo:"normale",
 
@@ -37,7 +37,7 @@ const database={
         ascia:{
             nome: "Ascia",
             atk:15,
-            sprite:"assets/axe.png",
+            sprite:"assets/weapons/axe.png",
             rarita:"comune",
             tipo:"normale",
 
@@ -57,7 +57,7 @@ const database={
         tirapugni:{
             nome: "Tirapugni",
             atk:10,
-            sprite:"assets/brass_knuckles.png",
+            sprite:"assets/weapons/brass_knuckles.png",
             rarita:"comune",
             tipo:"normale",
             //abilità passiva doppio colpo: ogni attacco colpisci due volte
@@ -70,7 +70,7 @@ const database={
         lancia:{
             nome:"Lancia",
             atk:15,
-            sprite:"assets/spear.png",
+            sprite:"assets/weapons/spear.png",
             rarita:"comune",
             tipo:"normale",
             //abilità passiva doppio affondo: ogni attacco ha una possibilità del 20% di fare un secondo attacco al nemico che infligge 5 danni in più 
@@ -90,6 +90,7 @@ const database={
             nome:"Spada di fuoco",
             atk:20,
             descrizione:"Una spada forgiata nelle fiamme dell'inferno pronta incenerire i tuoi nemici!",
+            sprite:"",
             tipo:"fuoco",
             rarita:"comune",
             abilita_passiva(){
@@ -109,7 +110,7 @@ const database={
         armaturaMaglia:{
             nome:"Armatura di maglia",
             difesa:5,
-            sprite:"assets/chainmail.png",
+            sprite:"assets/armors/chainmail.png",
             descrizione:"Una resistente armatura in cotta di maglia, con lei non si sbaglia mai!",
             //l'armatura base non aggiunge nessuna abilità passiva (per questione di codice però ne inserisco una vuota per evitare errori)
             abilita_passiva(){
@@ -120,7 +121,7 @@ const database={
         armaturaFerro:{
             nome:"Armatura di ferro",
             difesa:10,
-            sprite:"assets/ironArmor.png",
+            sprite:"assets/armors/ironArmor.png",
             descrizione:"Una solida e pesante armatura in ferro, una garanzia per eludere i colpi nemici!",
             //L'armatura ha la possibilità del 20% di aumentare la difesa di 5 punti per un turno
             abilita_passiva(){
@@ -138,7 +139,7 @@ const database={
         armaturaAngelica:{
             nome:"Armatura Angelica",
             difesa:15,
-            sprite:"assets/angelicArmor.png",
+            sprite:"assets/armors/angelicArmor.png",
             descrizione:"armatura creata dagli angeli, chiunque la indossi sarà benedetto in ogni battaglia",
             //Ogni turno cura il giocatore di 5 hp
             abilita_passiva(){
@@ -157,7 +158,7 @@ const database={
             maxHp:20, 
             attacco: 5, 
             stato:null,
-            sprite: "assets/slime.png"
+            sprite: "assets/enemies/slime.png"
         },
         goblin: { 
             nome: "Goblin", 
@@ -165,7 +166,7 @@ const database={
             maxHp:80, 
             attacco: 8, 
             stato:null,
-            sprite: "assets/goblin.png"
+            sprite: "assets/enemies/goblin.png"
         },
         scheletro: { 
             nome: "Guerriero Osseo", 
@@ -173,7 +174,7 @@ const database={
             maxHp:100,
             attacco: 12, 
             stato:null,
-            sprite: "assets/skeleton.png",
+            sprite: "assets/enemies/skeleton.png",
         },
     },
     consumabili: {
@@ -181,36 +182,39 @@ const database={
             nome: "Pozione Rossa",
             descrizione: "Una pozione comune. Cura 30 HP.",
             cura: 30,
-            sprite: "assets/items/potion.png"
+            sprite: "assets/consumables/potion.png"
         },
         pane: {
             nome: "Pane Casereccio",
             descrizione: "Semplice ma nutriente. Cura 15 HP.",
             cura: 15,
-            sprite: "assets/items/bread.png"
+            sprite: "assets/consumables/bread.png"
         },
         erba_magica: {
             nome: "Erba Curativa",
             descrizione: "Erba amara che rigenera 50 HP.",
             cura: 50,
-            sprite: "assets/items/herb.png"
+            sprite: "assets/consumables/herb.png"
         }
     },
     passivi: {
     anello_vita: { 
         nome: "Anello Rigenerante", 
         tipoEffetto: "cura_inizio_turno", // Categoria dell'effetto
-        valore: 5                         // Quanto cura
+        valore: 5,
+        sprite:""                         // Quanto cura
     },
     ciondolo_forza: { 
         nome: "Ciondolo Forza", 
         tipoEffetto: "moltiplicatore_danno", 
-        valore: 1.2                       // +20%
+        valore: 1.2,
+        sprite:""                       // +20%
     },
     spada_rotta: {
         nome: "Lama Arrugginita",
         tipoEffetto: "danno_piatto",
-        valore: 10                        // +10 danni fissi
+        valore: 10,
+        sprite:""                      // +10 danni fissi
     }
     },
     
@@ -225,7 +229,7 @@ const database={
             stato:null,
             inventario:[],
             passivi:[],
-            sprite: "assets/base_knight.png"
+            sprite: "assets/characters/base_knight.png"
         },
     },
 }
