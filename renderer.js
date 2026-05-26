@@ -515,6 +515,11 @@ function aggiungiLog(messaggio) {
 }
 
 function toggleOptions() {
+    if (gameState.animazioneInCorso && !giocoInPausa) {
+        // Se l'animazione è in corso ma NON è per via della pausa, 
+        // significa che c'è un baule o un attacco: blocca tutto.
+        return; 
+    }
     const menu = document.getElementById("options-menu");
     if (!menu) {
         console.error("Errore: Il div options-menu non esiste nell'HTML!");
@@ -595,32 +600,28 @@ function controllaSuccesso(percentuale) {
     return Math.random() * 100 < percentuale;
 }
 async function avanzaAlProssimoStage() {
-    stageCounter++; // Aumentiamo lo stage
+    stageCounter++; 
     let turniCaricati = turnCounter - ultimoTurnoSpeciale;
     turnCounter = 1;
     ultimoTurnoSpeciale = 1 - turniCaricati;
     
-    // Controlliamo se abbiamo superato gli stage massimi per questo mondo
+    // Controlliamo se abbiamo finito il mondo
     if (stageCounter > STAGE_PER_MONDO) {
-        apriChest();
-        worldCounter++;
-        stageCounter = 1; // Resettiamo lo stage per il nuovo mondo
-        aggiungiLog(`🌍 BENVENUTO NEL MONDO ${worldCounter}! 🌍`);
-        await aspetta(2000);
-    } else {
-       
-        aggiungiLog(`🚩 Avanzi allo Stage ${stageCounter}...`);
-        await aspetta(1500);
-    }
+        apriChest(); // Apre la schermata e mette animazioneInCorso = true
+        return;      // 🛑 FONDAMENTALE: Ferma l'esecuzione qui! Non va oltre.
+    } 
+        
+    // --- SE NON C'È LA CHEST (Avanzamento normale) ---
+    aggiungiLog(`🚩 Avanzi allo Stage ${stageCounter}...`);
+    await aspetta(1500);
 
-    // --- GENERAZIONE NUOVO NEMICO ---
-    // Adesso usiamo la funzione centralizzata che crea cloni perfetti
+    // Generazione nuovo nemico normale
     nemico = generaNemico(); 
 
-    // Ripartiamo!
+    // Ripartiamo
     gameState.fase = "TURNO_GIOCATORE";
+    gameState.animazioneInCorso = false; // Riapre i tasti
     aggiornaUI();
-    gameState.animazioneInCorso = false;
     aggiungiLog(`⚠️ Un nuovo nemico appare: ${nemico.nome}! È il tuo turno.`);
 }
 async function usaDalInventario(index) {
@@ -668,6 +669,7 @@ function cura() {
 
 function toggleZaino() {
     const screen = document.getElementById("inventory-screen");
+    if (chestScreen.classList.contains("visible") || gameState.animazioneInCorso) return;
     screen.classList.toggle("visible"); // Uso .visible come nel tuo CSS per la scelta armi
 
     if (screen.classList.contains("visible")) {
@@ -756,6 +758,7 @@ function apriChest() {
     const screen = document.getElementById("chest-screen");
     const lootName = document.getElementById("loot-name");
     const lootDesc = document.getElementById("loot-desc");
+    const lootImg = document.getElementById("loot-img");
 
     let oggettoTrovato = null;
     const r = Math.random();
@@ -803,14 +806,21 @@ function apriChest() {
         aggiungiLog(`✨ Trovi solo della Polvere Magica...`);
     }
 
-    // 4. Mostra la schermata e aggiorna la UI
-    if (lootName && lootDesc) {
+    if (oggettoTrovato) {
         lootName.innerText = oggettoTrovato.nome;
-        lootDesc.innerText = oggettoTrovato.desc || "Un oggetto prezioso!";
+        lootDesc.innerText = oggettoTrovato.desc || "Un oggetto misterioso...";
+
+        // 🖼️ GESTIONE IMMAGINE
+        if (oggettoTrovato.sprite) {
+            lootImg.src = oggettoTrovato.sprite;
+            lootImg.style.display = "block"; // La mostriamo
+        } else {
+            lootImg.style.display = "none";  // La nascondiamo se non c'è foto
+        }
     }
-    
+    gameState.animazioneInCorso = true;
     if (screen) screen.classList.add("visible");
-    aggiornaUI(); // Aggiorna cuori/statistiche a schermo
+    aggiornaUI();
 }
 
 function aggiungiAInventario(idOggetto) {
@@ -825,9 +835,26 @@ function aggiungiAInventario(idOggetto) {
         giocatore.inventario.push({ id: idOggetto, quantita: 1 });
     }
 }
-function prossimoLivello() {
+async function prossimoLivello() {
+    // 1. Chiudiamo la schermata
     document.getElementById("chest-screen").classList.remove("visible");
-    // Qui chiami la tua funzione per generare il nuovo mostro e resettare la battaglia
+    
+    // 2. Ora avanziamo di mondo (dopo aver preso l'oggetto)
+    worldCounter++;
+    stageCounter = 1; 
+    aggiungiLog(`🌍 BENVENUTO NEL MONDO ${worldCounter}! 🌍`);
+    
+    await aspetta(1000); // Piccola pausa scenica
+    
+    // 3. Generiamo il primo nemico del nuovo mondo
+    nemico = generaNemico(); 
+    
+    // 4. Sblocchiamo il gioco
+    gameState.fase = "TURNO_GIOCATORE";
+    gameState.animazioneInCorso = false; // 🔓 Tasti finalmente sbloccati
+    
+    aggiornaUI();
+    aggiungiLog(`⚠️ Un nuovo nemico appare: ${nemico.nome}! È il tuo turno.`);
 }
 // Inizializza la UI all'avvio
 aggiornaUI();

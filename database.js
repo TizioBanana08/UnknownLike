@@ -214,7 +214,7 @@ const database={
         nome: "Lama Arrugginita",
         tipoEffetto: "danno_piatto",
         valore: 10,
-        sprite:""                      // +10 danni fissi
+        sprite:"assets/passives/broken_sword.png"                      // +10 danni fissi
     }
     },
     

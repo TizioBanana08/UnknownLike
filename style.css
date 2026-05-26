@@ -609,26 +609,104 @@ li{
 #inventory-screen .close-btn:hover {
     background-color: #d32f2f;
     transform: scale(1.1);
+/* Overlay di sfondo */
 }
+/* Overlay scuro di sfondo */
 #chest-screen {
     position: fixed;
     top: 0; left: 0;
     width: 100vw; height: 100vh;
     background: rgba(0, 0, 0, 0.8);
-    display: none; /* Diventa flex con la classe active/visible */
+    display: none; 
     justify-content: center;
     align-items: center;
-    z-index: 9998; /* Un gradino sotto il game over */
+    z-index: 9998;
+    pointer-events: all;
 }
 
 #chest-screen.visible {
     display: flex !important;
 }
 
+/* LA SCATOLA CON IL BORDO ESTERNO */
+.chest-popup-box {
+    background: #e6cda4; 
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 450px;
+    width: 90%;
+    
+    /* --- IL TUO BORDO ESTERNO --- */
+    border: 5px solid #4b2d1f; /* Bordo solido, scuro e spesso */
+    box-shadow: 0 10px 0 rgba(0,0,0,0.2), inset 0 0 15px rgba(173, 122, 89, 0.2);
+}
+
+#chest-title {
+    color: #4b2d1f;
+    font-size: 28px;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+/* IL RIQUADRO TRATTEGGIATO INTERNO */
 #chest-item-display {
-    margin: 20px 0;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    border: 2px dashed #ad7a59;
+    margin: 10px 0 25px 0;
+    padding: 25px;
+    background: rgba(173, 122, 89, 0.08); 
+    border: 2px dashed #ad7a59; /* Bordo tratteggiato per l'oggetto */
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Aura dorata */
+.glow-effect {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, transparent 70%);
+}
+
+#loot-img {
+    width: 75px; 
+    height: 75px;
+    object-fit: contain;
+}
+
+#loot-name {
+    color: #2e1d15;
+    font-size: 22px;
+    margin: 10px 0 5px 0;
+}
+
+#loot-desc {
+    color: #5d4037;
+    font-size: 15px;
+    margin: 0;
+}
+
+/* Pulsante */
+.btn-continua {
+    background: #2e1d15;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: 0.2s;
+}
+
+.btn-continua:hover {
+    background: #4b2d1f;
+    transform: translateY(-2px);
 }
