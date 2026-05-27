@@ -1,17 +1,29 @@
 {
   "name": "unknownlike",
   "version": "1.0.0",
-  "description": "",
+  "description": "Il mio gioco RPG",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "electron .",
+    "dist": "electron-builder" 
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "electron": "^42.3.0"
+    "electron": "^42.3.0",
+    "electron-builder": "^26.8.1"
+  },
+  "build": {
+    "appId": "com.tuonome.unknownlike",
+    "win": {
+      "target": "portable",
+      "forceCodeSigning": false
+    },
+    "directories": {
+      "output": "dist"
+    }
   }
 }
