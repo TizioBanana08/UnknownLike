@@ -202,7 +202,7 @@ const database={
         nome: "Anello Rigenerante", 
         tipoEffetto: "cura_inizio_turno", // Categoria dell'effetto
         valore: 5,
-        sprite:""                         // Quanto cura
+        sprite:"assets/passives/heal_ring.png"                         // Quanto cura
     },
     ciondolo_forza: { 
         nome: "Ciondolo Forza", 
