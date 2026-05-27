@@ -90,7 +90,7 @@ const database={
             nome:"Spada di fuoco",
             atk:20,
             descrizione:"Una spada forgiata nelle fiamme dell'inferno pronta incenerire i tuoi nemici!",
-            sprite:"",
+            sprite:"assets/weapons/flame_sword",
             tipo:"fuoco",
             rarita:"comune",
             abilita_passiva(){
