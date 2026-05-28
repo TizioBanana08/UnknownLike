@@ -32,11 +32,13 @@ ul {
     list-style: none;
     padding: 0;
 }
-li{
+
+li {
     background-color: white;
     padding: 10px;
-    margin:10px;
+    margin: 10px;
 }
+
 .battle-area {
     display: flex;
     justify-content: space-around;
@@ -45,28 +47,33 @@ li{
     width: 100%;
     margin-top: 20px;
 }
+
 #main-container {
-    display: none; 
+    display: none;
     flex-direction: column;
     width: 100%;
     height: 100vh;
     position: relative;
 }
-#main-container.active, 
+
+#main-container.active,
 #weapon-selection-screen.visible {
-    display: flex !important; /* o block, a seconda del tuo layout */
+    display: flex !important;
+    /* o block, a seconda del tuo layout */
 }
+
 #main-container.hidden {
     display: none !important;
 }
+
 .entity {
     display: flex;
     flex-direction: column;
-    align-items: center; 
-    justify-content: space-between; 
+    align-items: center;
+    justify-content: space-between;
     background: #e6cda4;
     border: 5px solid #ad7a59;
-    width: 250px; 
+    width: 250px;
     height: 380px;
     padding: 20px;
     border-radius: 15px;
@@ -99,16 +106,16 @@ li{
     background-color: #444;
     border: 2px solid #222;
     margin-bottom: 10px;
-    overflow: hidden; 
-    display: block;   
+    overflow: hidden;
+    display: block;
 }
 
 .health-bar {
-    width: 100%;      
+    width: 100%;
     height: 100%;
     background-color: #01ad23;
-    transition: width 0.4s ease, background-color 0.4s ease; 
-    transform-origin: left; 
+    transition: width 0.4s ease, background-color 0.4s ease;
+    transform-origin: left;
 }
 
 #bottom-bar {
@@ -147,7 +154,8 @@ li{
     margin-bottom: 8px;
     padding: 8px;
     border-bottom: 1px solid rgba(173, 122, 89, 0.3);
-    animation: comparsaMessaggio 0.3s ease-out forwards; /* Animazione! */
+    animation: comparsaMessaggio 0.3s ease-out forwards;
+    /* Animazione! */
     font-size: 0.9rem;
     color: #4a332d;
 }
@@ -157,14 +165,15 @@ li{
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-#title-log{
-    color:#5d4037 ;
+#title-log {
+    color: #5d4037;
     font-weight: bold;
     font-size: 2.5vh;
     border: 5px solid #ad7a59;
@@ -179,14 +188,16 @@ li{
 }
 
 .actions-container {
-    flex: 1.5; /* Regola questo valore per la larghezza rispetto al log */
+    flex: 1.5;
+    /* Regola questo valore per la larghezza rispetto al log */
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Spazia la riga sopra dal tasto cura sotto */
+    justify-content: space-between;
+    /* Spazia la riga sopra dal tasto cura sotto */
     gap: 10px;
-    
+
     /* STILE RIQUADRO (Uguale al log e all'inventario) */
-    background: #e6cda4; 
+    background: #e6cda4;
     border: 5px solid #ad7a59;
     border-radius: 5px;
     padding: 15px;
@@ -196,7 +207,8 @@ li{
 .action-row {
     display: flex;
     gap: 10px;
-    flex: 1; /* Prende metà altezza */
+    flex: 1;
+    /* Prende metà altezza */
 }
 
 .actions-container button {
@@ -204,7 +216,7 @@ li{
     font-size: 1.1rem;
     font-weight: bold;
     color: white;
-    border: 3px solid rgba(0,0,0,0.3);
+    border: 3px solid rgba(0, 0, 0, 0.3);
     border-radius: 5px;
     transition: transform 0.1s;
     display: flex;
@@ -212,20 +224,21 @@ li{
     justify-content: center;
 }
 
-#atk-button { 
-    background-color: #b71c1c; 
-    flex: 1; 
+#atk-button {
+    background-color: #b71c1c;
+    flex: 1;
 }
 
-#special-atk-button { 
-    background-color: #6a1b9a; 
-    flex: 1; 
+#special-atk-button {
+    background-color: #6a1b9a;
+    flex: 1;
 }
 
-#heal-button { 
-    background-color: #2e7d32; 
+#heal-button {
+    background-color: #2e7d32;
     width: 100%;
-    flex: 0.8; /* Leggermente più basso dei due sopra, o 1 per uguale */
+    flex: 0.8;
+    /* Leggermente più basso dei due sopra, o 1 per uguale */
 }
 
 .actions-container button:hover {
@@ -235,87 +248,110 @@ li{
 .actions-container button:active {
     transform: scale(0.95);
 }
+
 .inventory-container {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centra i due blocchi verticalmente */
+    justify-content: center;
+    /* Centra i due blocchi verticalmente */
     align-items: center;
     border: 5px solid #ad7a59;
     padding: 10px;
     background: #e6cda4;
     border-radius: 5px;
-    height: 100%; /* Forza il contenitore a stare nei limiti della bottom-bar */
-    overflow: hidden; /* Impedisce che gli item escano dai bordi */
+    height: 100%;
+    /* Forza il contenitore a stare nei limiti della bottom-bar */
+    overflow: hidden;
+    /* Impedisce che gli item escano dai bordi */
 }
+
 .item-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 100%;
-    flex: 1; /* Divide lo spazio a metà tra arma e armatura */
-    margin: 0; 
-    min-height: 0; /* Fix per Flexbox su alcuni browser/versioni Electron */
+    flex: 1;
+    /* Divide lo spazio a metà tra arma e armatura */
+    margin: 0;
+    min-height: 0;
+    /* Fix per Flexbox su alcuni browser/versioni Electron */
 }
 
 .item-container img {
     /* Usiamo una dimensione basata sull'altezza dello schermo (vh) 
        per evitare che l'immagine sia più grande del contenitore stesso */
-    height: 20vh; 
+    height: 20vh;
     width: 20vh;
-    max-height: 80px; /* Limite massimo per schermi grandi */
+    max-height: 80px;
+    /* Limite massimo per schermi grandi */
     max-width: 80px;
-    
+
     background: #3e2723;
     border: 4px inset #5d4037;
     border-radius: 8px;
-    object-fit: contain; /* L'immagine non si deforma */
+    object-fit: contain;
+    /* L'immagine non si deforma */
     padding: 8px;
-    image-rendering: pixelated; 
+    image-rendering: pixelated;
     transition: transform 0.2s, border-color 0.2s;
 
 }
+
 .item-container img:hover {
     transform: scale(1.1);
     border-color: #d4af37;
     cursor: pointer;
 }
+
 .item-container p {
-    margin: 2px 0 5px 0; /* Ridotto il margine per risparmiare spazio */
+    margin: 2px 0 5px 0;
+    /* Ridotto il margine per risparmiare spazio */
     font-size: 1.5rem;
     color: #4a332d;
     text-transform: uppercase;
     font-weight: bold;
     text-align: center;
 }
+
 #weapon-sprite-img {
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); /* Un leggero bagliore dorato */
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    /* Un leggero bagliore dorato */
 }
+
 .description-box {
     position: fixed;
     /* Posizioniamo l'angolo in alto a sinistra esattamente al centro dello schermo */
-    top: 50%; 
+    top: 50%;
     left: 50%;
-    
+
     /* Spostiamo il box indietro del 50% della sua stessa larghezza e altezza */
     /* Questo lo centra perfettamente rispetto al suo centro, non all'angolo */
     transform: translate(-50%, -50%);
-    
-    background: #f4e4bc; /* Il tuo colore pergamena */
+
+    background: #f4e4bc;
+    /* Il tuo colore pergamena */
     border: 4px solid #5d4037;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 30px rgba(0,0,0,0.7); /* Ombra più marcata per farlo "staccare" */
-    z-index: 2000; /* Assicurati che sia sopra TUTTO, anche sopra i bottoni */
-    
-    width: 350px; /* Leggermente più largo per la leggibilità */
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+    /* Ombra più marcata per farlo "staccare" */
+    z-index: 2000;
+    /* Assicurati che sia sopra TUTTO, anche sopra i bottoni */
+
+    width: 350px;
+    /* Leggermente più largo per la leggibilità */
     text-align: center;
-    pointer-events: none; /* Importante: così non blocca i click se appare sopra un tasto */
+    pointer-events: none;
+    /* Importante: così non blocca i click se appare sopra un tasto */
     transition: opacity 0.2s ease-in-out;
+    z-index: 99999999 !important;
 }
+
 .hidden {
-    display: none !important; /* Nasconde il box inizialmente */
+    display: none !important;
+    /* Nasconde il box inizialmente */
 }
 
 #desc-name {
@@ -329,6 +365,7 @@ li{
     font-style: italic;
     color: #333;
 }
+
 #game-over-screen {
     position: fixed;
     top: 0;
@@ -339,7 +376,8 @@ li{
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999; /* Sopra a ogni altra cosa */
+    z-index: 9999;
+    /* Sopra a ogni altra cosa */
     animation: fadeIn 1s ease-in-out;
 }
 
@@ -364,7 +402,7 @@ li{
     gap: 20px;
     justify-content: center;
     margin-top: 30px;
-    
+
 }
 
 .game-over-buttons button {
@@ -382,16 +420,26 @@ li{
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
+
 #main-menu {
     position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background-image: url('assets/base_background.png'); /* Uno sfondo figo */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('assets/base_background.png');
+    /* Uno sfondo figo */
     background-size: cover;
-    z-index: 10000; /* Più alto di tutto, anche del Game Over */
+    z-index: 10000;
+    /* Più alto di tutto, anche del Game Over */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -403,72 +451,95 @@ li{
     text-shadow: 5px 5px #000;
     margin-bottom: 50px;
 }
+
 .menu-options {
     display: flex;
-    flex-direction: column; /* Li mette in colonna */
-    gap: 20px;              /* Spazio tra un bottone e l'altro */
-    align-items: center;    /* Li centra orizzontalmente */
+    flex-direction: column;
+    /* Li mette in colonna */
+    gap: 20px;
+    /* Spazio tra un bottone e l'altro */
+    align-items: center;
+    /* Li centra orizzontalmente */
     margin-top: 50px;
 }
 
 /* Stile dei bottoni del menù */
 .menu-options button {
-    width: 300px;           /* Larghezza fissa generosa */
-    padding: 20px;          /* Più spazio interno per farli "alti" */
-    font-size: 1.5rem;      /* Testo bello grande */
+    width: 300px;
+    /* Larghezza fissa generosa */
+    padding: 20px;
+    /* Più spazio interno per farli "alti" */
+    font-size: 1.5rem;
+    /* Testo bello grande */
     font-weight: bold;
     text-transform: uppercase;
     cursor: pointer;
-    
+
     /* Stile estetico (seguendo il tuo tema) */
-    background: #e6cda4; 
+    background: #e6cda4;
     border: 5px solid #ad7a59;
     color: #5d4037;
     border-radius: 10px;
-    
-    transition: all 0.2s ease; /* Animazione fluida */
+
+    transition: all 0.2s ease;
+    /* Animazione fluida */
 }
 
 /* Effetto al passaggio del mouse */
 .menu-options button:hover {
-    background: #d4af37;    /* Diventa color oro */
+    background: #d4af37;
+    /* Diventa color oro */
     border-color: #5d4037;
-    transform: scale(1.05); /* Si ingrandisce leggermente */
+    transform: scale(1.05);
+    /* Si ingrandisce leggermente */
     color: white;
 }
+
 #options-menu {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.7); /* Sfondo scuro semitrasparente */
-    display: none; /* Nascondi di default */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    /* Sfondo scuro semitrasparente */
+    display: none;
+    /* Nascondi di default */
     justify-content: center;
     align-items: center;
-    z-index: 9999999; /* Sopra a tutto */
+    z-index: 9999999;
+    /* Sopra a tutto */
     pointer-events: all;
 }
+
 /* Quando togliamo .hidden o cambiamo display */
 /* Questa classe DEVE avere !important per vincere su display: none */
 #options-menu.visible {
     display: flex !important;
 }
+
 .options-buttons {
     display: flex;
     flex-direction: column;
     gap: 15px;
     margin-top: 20px;
 }
+
 #weapon-selection-screen {
     position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background-color: #87ceeb; /* Un colore di sfondo a tua scelta, o un'immagine */
-    display: none !important; /* Nascosto di default */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #87ceeb;
+    /* Un colore di sfondo a tua scelta, o un'immagine */
+    display: none !important;
+    /* Nascosto di default */
     justify-content: center;
     align-items: center;
     flex-direction: column;
     z-index: 1000;
-    
+
 }
 
 #weapon-selection-screen.visible {
@@ -477,7 +548,8 @@ li{
 
 .weapons-container {
     display: flex;
-    gap: 30px; /* Spazio tra le carte */
+    gap: 30px;
+    /* Spazio tra le carte */
     margin-top: 40px;
 }
 
@@ -492,7 +564,7 @@ li{
     align-items: center;
     text-align: center;
     gap: 15px;
-    box-shadow: 5px 5px 0px rgba(0,0,0,0.3);
+    box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.3);
 }
 
 .weapon-card h3 {
@@ -503,7 +575,8 @@ li{
 .weapon-card img {
     width: 80px;
     height: 80px;
-    image-rendering: pixelated; /* Perfetto se usi la pixel art */
+    image-rendering: pixelated;
+    /* Perfetto se usi la pixel art */
 }
 
 .weapon-card button {
@@ -515,51 +588,61 @@ li{
     font-weight: bold;
     cursor: pointer;
     border-radius: 5px;
-    margin-top: auto; /* Spinge il bottone sempre in fondo alla carta */
+    margin-top: auto;
+    /* Spinge il bottone sempre in fondo alla carta */
     transition: transform 0.1s, background 0.2s;
 }
 
 .weapon-card button:hover {
-    background: #d4af37; /* Diventa dorato al passaggio del mouse */
+    background: #d4af37;
+    /* Diventa dorato al passaggio del mouse */
     transform: scale(1.1);
 }
+
 /* Stile per il contenitore dei contatori */
 #count {
     position: fixed;
     top: 20px;
     left: 20px;
-    z-index: 1000; /* Assicura che sia sopra lo sfondo */
+    z-index: 1000;
+    /* Assicura che sia sopra lo sfondo */
 }
 
 .info-counter {
-    background: rgba(230, 205, 164, 0.8); /* Beige semitrasparente */
+    background: rgba(230, 205, 164, 0.8);
+    /* Beige semitrasparente */
     border: 3px solid #ad7a59;
     padding: 10px 15px;
     border-radius: 8px;
-    box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+    box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
 }
 
 .info-counter p {
     margin: 0;
     color: #5d4037;
     font-weight: bold;
-    font-family: 'Courier New', Courier, monospace; /* Stile un po' retro/terminale */
+    font-family: 'Courier New', Courier, monospace;
+    /* Stile un po' retro/terminale */
     font-size: 1.1rem;
     text-transform: uppercase;
 }
+
 /* Definiamo l'animazione di pulsazione */
 @keyframes glowSpeciale {
-    0% { 
-        box-shadow: 0 0 5px #6a1b9a; 
+    0% {
+        box-shadow: 0 0 5px #6a1b9a;
         filter: brightness(1);
     }
-    50% { 
-        box-shadow: 0 0 20px #d4af37, inset 0 0 10px #d4af37; /* Bagliore dorato */
+
+    50% {
+        box-shadow: 0 0 20px #d4af37, inset 0 0 10px #d4af37;
+        /* Bagliore dorato */
         border-color: #d4af37;
         filter: brightness(1.3);
     }
-    100% { 
-        box-shadow: 0 0 5px #6a1b9a; 
+
+    100% {
+        box-shadow: 0 0 5px #6a1b9a;
         filter: brightness(1);
     }
 }
@@ -567,15 +650,20 @@ li{
 /* La classe che aggiungeremo col JavaScript */
 .special-ready {
     animation: glowSpeciale 1.5s infinite alternate !important;
-    text-shadow: 0 0 5px white; /* Fa risaltare un po' il testo */
+    text-shadow: 0 0 5px white;
+    /* Fa risaltare un po' il testo */
 }
+
 /* Rendiamo lo zaino identico alla selezione armi */
 #inventory-screen {
     position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: rgba(0, 0, 0, 0.85); /* Sfondo scuro per far risaltare lo zaino */
-    display: none; 
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    /* Sfondo scuro per far risaltare lo zaino */
+    display: none;
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -590,34 +678,42 @@ li{
 #inventory-list .weapon-card {
     min-height: 300px;
 }
+
 /* Selettore specifico per il tasto di chiusura dello zaino */
 #inventory-screen .close-btn {
-    margin-top: 50px;       /* Crea spazio tra le card e il bottone */
-    padding: 15px 40px;      /* Lo rende più grande e cliccabile */
-    background-color: #e6cda4; 
+    margin-top: 50px;
+    /* Crea spazio tra le card e il bottone */
+    padding: 15px 40px;
+    /* Lo rende più grande e cliccabile */
+    background-color: #e6cda4;
     color: #3e2723;
     font-size: 1.2rem;
     border: 3px solid #3e2723;
     border-radius: 8px;
     cursor: pointer;
     transition: transform 0.2s;
-    display: block;          /* Assicura che si comporti come un blocco */
-    margin-left: auto;       /* Insieme a margin-right: auto lo centra */
+    display: block;
+    /* Assicura che si comporti come un blocco */
+    margin-left: auto;
+    /* Insieme a margin-right: auto lo centra */
     margin-right: auto;
 }
 
 #inventory-screen .close-btn:hover {
     background-color: #d32f2f;
     transform: scale(1.1);
-/* Overlay di sfondo */
+    /* Overlay di sfondo */
 }
+
 /* Overlay scuro di sfondo */
 #chest-screen {
     position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     background: rgba(0, 0, 0, 0.8);
-    display: none; 
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 9998;
@@ -630,16 +726,17 @@ li{
 
 /* LA SCATOLA CON IL BORDO ESTERNO */
 .chest-popup-box {
-    background: #e6cda4; 
+    background: #e6cda4;
     padding: 30px;
     border-radius: 12px;
     text-align: center;
     max-width: 450px;
     width: 90%;
-    
+
     /* --- IL TUO BORDO ESTERNO --- */
-    border: 5px solid #4b2d1f; /* Bordo solido, scuro e spesso */
-    box-shadow: 0 10px 0 rgba(0,0,0,0.2), inset 0 0 15px rgba(173, 122, 89, 0.2);
+    border: 5px solid #4b2d1f;
+    /* Bordo solido, scuro e spesso */
+    box-shadow: 0 10px 0 rgba(0, 0, 0, 0.2), inset 0 0 15px rgba(173, 122, 89, 0.2);
 }
 
 #chest-title {
@@ -654,8 +751,9 @@ li{
 #chest-item-display {
     margin: 10px 0 25px 0;
     padding: 25px;
-    background: rgba(173, 122, 89, 0.08); 
-    border: 2px dashed #ad7a59; /* Bordo tratteggiato per l'oggetto */
+    background: rgba(173, 122, 89, 0.08);
+    border: 2px dashed #ad7a59;
+    /* Bordo tratteggiato per l'oggetto */
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -675,7 +773,7 @@ li{
 }
 
 #loot-img {
-    width: 75px; 
+    width: 75px;
     height: 75px;
     object-fit: contain;
 }
@@ -709,4 +807,77 @@ li{
 .btn-continua:hover {
     background: #4b2d1f;
     transform: translateY(-2px);
+}
+
+/* Posizionamento a schermo intero (simile a #chest-screen) */
+#grimoire-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    /* Sfondo scuro ereditato */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999999 !important
+        /* Sopra il menù principale */
+}
+
+#grimoire-screen.visible {
+    display: flex !important;
+}
+
+/* Griglia degli oggetti */
+.griglia-grimorio {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 10px 0;
+    justify-content: center;
+    overflow-y: auto;
+    /* Permette lo scorrimento se ci sono troppi oggetti */
+    padding: 10px;
+    flex-grow: 1;
+    /* Fa riempire lo spazio al contenitore */
+}
+
+/* Il singolo slot (eredita un po' i colori di .item-container) */
+.slot-grimorio {
+    width: 70px;
+    height: 70px;
+    background: #3e2723;
+    border: 4px inset #5d4037;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: white;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.slot-grimorio:hover {
+    transform: scale(1.1);
+    border-color: #d4af37;
+    cursor: help;
+    /* Cambia l'icona del mouse */
+}
+
+.slot-grimorio img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+    image-rendering: pixelated;
+    /* Mantiene la pixel art nitida */
+}
+
+/* Oggetti non ancora trovati */
+.slot-grimorio.non-scoperto {
+    background: #2e1d15;
+    border-color: #2e1d15;
+    color: rgba(173, 122, 89, 0.4);
+    box-shadow: none;
 }

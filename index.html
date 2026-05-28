@@ -1,152 +1,185 @@
 <html>
-    <head>
-        <title>UnknownLike</title>
-        <link rel="stylesheet" href="style.css">
-        <meta charset="UTF-8">
-    </head>
-    <body>
-        <div id="weapon-selection-screen" class="hidden">
-            <div class="selection-content">
-                <h1 class="game-title">SCEGLI LA TUA ARMA</h1>
-                <div class="weapons-container">
-                    <div class="weapon-card">
-                        <h3>SPADA CORTA</h3>
-                            <img src="" alt="Spada"> 
-                                <p>Danno stabile, facile da usare. Ottima per iniziare.</p>
-                                <button onclick="selezionaStarter('spada')">SCEGLI</button>
-                    </div>
+
+<head>
+    <title>UnknownLike</title>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <div id="weapon-selection-screen" class="hidden">
+        <div class="selection-content">
+            <h1 class="game-title">SCEGLI LA TUA ARMA</h1>
+            <div class="weapons-container">
+                <div class="weapon-card">
+                    <h3>SPADA CORTA</h3>
+                    <img src="" alt="Spada">
+                    <p>Danno stabile, facile da usare. Ottima per iniziare.</p>
+                    <button onclick="selezionaStarter('spada')">SCEGLI</button>
+                </div>
                 <div class="weapon-card">
                     <h3>ARCO LUNGO</h3>
                     <img src="" alt="Arco">
                     <p>Attacco a distanza con un'alta chance di colpo critico.</p>
                     <button onclick="selezionaStarter('arco')">SCEGLI</button>
                 </div>
-            <div class="weapon-card">
-                <h3>BASTONE MAGICO</h3>
-                <img src="" alt="Bastone">
-                <p>Infligge danni magici elevati, ma consuma Mana.</p>
-                <button onclick="selezionaStarter('bastone')">SCEGLI</button>
-            </div>
+                <div class="weapon-card">
+                    <h3>BASTONE MAGICO</h3>
+                    <img src="" alt="Bastone">
+                    <p>Infligge danni magici elevati, ma consuma Mana.</p>
+                    <button onclick="selezionaStarter('bastone')">SCEGLI</button>
                 </div>
             </div>
-        </div>
-        <div id="inventory-screen" class="hidden">
-            <div class="selection-content">
-                <h1 class="game-title">IL TUO ZAINO</h1>
-                <div id="inventory-list" class="weapons-container">
-                    </div>
-                <button onclick="toggleZaino()" class="close-btn">CHIUDI ZAINO</button>
-            </div>
-        </div>
-        <div id="chest-screen" class="hidden">
-    <div class="chest-popup-box"> 
-        <h1 id="chest-title">TESORO TROVATO!</h1>
-        
-        <div id="chest-item-display">
-            <div class="glow-effect">
-                <img id="loot-img" src="" alt="Icona Oggetto">
-            </div>
-            <h2 id="loot-name">Nome Oggetto</h2>
-            <p id="loot-desc">Descrizione dell'effetto...</p>
-            <div id="scelta-armatura-container" style="display: none; margin-top: 15px;">
-                <p>Hai già <strong><span id="armatura-attuale-nome"></span></strong>.</p>
-                <button onclick="confermaScambioArmatura(true)">Scambia</button>
-                <button onclick="confermaScambioArmatura(false)">Tieni la tua</button>
-            </div>
-        </div>
-
-        <div class="game-over-buttons">
-            <button class="btn-continua" onclick="prossimoLivello()">CONTINUA IL VIAGGIO</button>
         </div>
     </div>
-</div>
-        <div id="main-menu">
-            <div class="menu-content">
-                <h1 class="game-title">UNKNOWN LIKE</h1>
-                <div class="menu-options">
-                    <button onclick="startGame()">INIZIA PARTITA</button>
-                    <button onclick="openGrimorie()">GRIMORIO</button>
-                    <button onclick="quitGame()">ESCI</button>
+    <div id="inventory-screen" class="hidden">
+        <div class="selection-content">
+            <h1 class="game-title">IL TUO ZAINO</h1>
+            <div id="inventory-list" class="weapons-container">
+            </div>
+            <button onclick="toggleZaino()" class="close-btn">CHIUDI ZAINO</button>
+        </div>
+    </div>
+    <div id="chest-screen" class="hidden">
+        <div class="chest-popup-box">
+            <h1 id="chest-title">TESORO TROVATO!</h1>
+
+            <div id="chest-item-display">
+                <div class="glow-effect">
+                    <img id="loot-img" src="" alt="Icona Oggetto">
                 </div>
+                <h2 id="loot-name">Nome Oggetto</h2>
+                <p id="loot-desc">Descrizione dell'effetto...</p>
+                <div id="scelta-armatura-container" style="display: none; margin-top: 15px;">
+                    <p>Hai già <strong><span id="armatura-attuale-nome"></span></strong>.</p>
+                    <button onclick="confermaScambioArmatura(true)">Scambia</button>
+                    <button onclick="confermaScambioArmatura(false)">Tieni la tua</button>
+                </div>
+            </div>
+
+            <div class="game-over-buttons">
+                <button class="btn-continua" onclick="prossimoLivello()">CONTINUA IL VIAGGIO</button>
             </div>
         </div>
-        <div id="main-container" class="hidden">
-            <div class="info-counter" id="count"></div>
-            <div class="battle-area">
-                <div class="entity" id="player-card">
-                    <h2 id="p-name">Eroe</h2>
-                    <div class="sprite-container">
-                        <img id="p-sprite-img" src="">
-                    </div>
-                    <p><span style="font-weight: bold;">HP:</span> <span id="p-hp">100</span></p>
-                    <p><span style="font-weight: bold;">Arma:</span> <span id="p-weapon">Spada</span></p>
-                    
-                    <div class="health-bar-container">
-                        <div id="p-health-bar" class="health-bar"></div>
-                    </div>
-                </div>
-                <div class="vs">VS</div>
-                <div class="entity" id="enemy-card">
-                    <h2 id="e-name">Mostro</h2>
-                    <div class="sprite-container">
-                        <img id="e-sprite-img" src="">
-                    </div>
-                    <p><span style="font-weight: bold;">HP:</span> <span id="e-hp">80</span></p>
-                    <p><span style="font-weight: bold;">Potenza:</span> <span id="e-atk">10</span></p>
-                    <div class="health-bar-container">
-                        <div id="e-health-bar" class="health-bar"></div>
-                    </div>
-                </div>
-            </div>
-            <div id="bottom-bar">
-                <div class="log-container">
-                    <div id="title-log">
-                        <p>BATTLE LOG</p>
-                    </div>
-                    <ul id="battle-log"></ul>
-                </div>
-                <div class="inventory-container">
-                    <div class="item-container" id="weapon-container">
-                        <p>Arma in uso:</p>
-                        <img id="weapon-sprite-img" src="">
-                    </div>
-                    <div class="item-container">
-                        <p>Armatura in uso:</p>
-                        <img id="armor-sprite-img" src="">
-                    </div>
-                </div>
-                <div id="item-description" class="description-box hidden">
-                    <h3 id="desc-name">Nome Item</h3>
-                    <p id="desc-text">Descrizione dell'effetto...</p>
-                </div>
-                <div class="actions-container">
-                    <div class="action-row">
-                        <button onclick="attaccoGiocatore()" id="atk-button">Attacca con l'arma!</button>
-                        <button onclick="attaccoSpeciale()" id="special-atk-button">Attaco speciale!</button>
-                    </div>
-                    <button onclick="cura()" id="heal-button">Curati!</button>
-                </div>
-                
-            </div>
-            
-        </div>
-        <div id="game-over-screen" class="hidden">
-            <div class="game-over-content">
-                <h1>SEI STATO SCONFITTO</h1>
-                <p>Il tuo viaggio finisce qui...</p>
-                <div class="game-over-buttons">
-                    <button onclick="restartGame()">Riprova</button>
-                    <button onclick="quitGame()">Esci dal Gioco</button>
-                </div>
-            </div>
-        </div>
-        <div id="options-menu" class="hidden">
+    </div>
+
+    <div id="main-menu">
+        <div class="menu-content">
+            <h1 class="game-title">UNKNOWN LIKE</h1>
             <div class="menu-options">
-                <button onclick="toggleOptions()">RIPRENDI</button>
-                <button onclick="location.reload()">MENU PRINCIPALE</button>
-                <button onclick="window.close()">ESCI DAL GIOCO</button>
+                <button onclick="startGame()">INIZIA PARTITA</button>
+                <button onclick="apriGrimorio()">GRIMORIO</button>
+                <button onclick="quitGame()">ESCI</button>
             </div>
         </div>
-        <script src="renderer.js"></script>
-    </body>
+    </div>
+    <div id="main-container" class="hidden">
+        <div class="info-counter" id="count"></div>
+        <div class="battle-area">
+            <div class="entity" id="player-card">
+                <h2 id="p-name">Eroe</h2>
+                <div class="sprite-container">
+                    <img id="p-sprite-img" src="">
+                </div>
+                <p><span style="font-weight: bold;">HP:</span> <span id="p-hp">100</span></p>
+                <p><span style="font-weight: bold;">Arma:</span> <span id="p-weapon">Spada</span></p>
+
+                <div class="health-bar-container">
+                    <div id="p-health-bar" class="health-bar"></div>
+                </div>
+            </div>
+            <div class="vs">VS</div>
+            <div class="entity" id="enemy-card">
+                <h2 id="e-name">Mostro</h2>
+                <div class="sprite-container">
+                    <img id="e-sprite-img" src="">
+                </div>
+                <p><span style="font-weight: bold;">HP:</span> <span id="e-hp">80</span></p>
+                <p><span style="font-weight: bold;">Potenza:</span> <span id="e-atk">10</span></p>
+                <div class="health-bar-container">
+                    <div id="e-health-bar" class="health-bar"></div>
+                </div>
+            </div>
+        </div>
+        <div id="bottom-bar">
+            <div class="log-container">
+                <div id="title-log">
+                    <p>BATTLE LOG</p>
+                </div>
+                <ul id="battle-log"></ul>
+            </div>
+            <div class="inventory-container">
+                <div class="item-container" id="weapon-container">
+                    <p>Arma in uso:</p>
+                    <img id="weapon-sprite-img" src="">
+                </div>
+                <div class="item-container">
+                    <p>Armatura in uso:</p>
+                    <img id="armor-sprite-img" src="">
+                </div>
+            </div>
+
+            <div class="actions-container">
+                <div class="action-row">
+                    <button onclick="attaccoGiocatore()" id="atk-button">Attacca con l'arma!</button>
+                    <button onclick="attaccoSpeciale()" id="special-atk-button">Attaco speciale!</button>
+                </div>
+                <button onclick="cura()" id="heal-button">Curati!</button>
+            </div>
+
+        </div>
+
+    </div>
+    <div id="game-over-screen" class="hidden">
+        <div class="game-over-content">
+            <h1>SEI STATO SCONFITTO</h1>
+            <p>Il tuo viaggio finisce qui...</p>
+            <div class="game-over-buttons">
+                <button onclick="restartGame()">Riprova</button>
+                <button onclick="quitGame()">Esci dal Gioco</button>
+            </div>
+        </div>
+    </div>
+    <div id="options-menu" class="hidden">
+        <div class="menu-options">
+            <button onclick="toggleOptions()">RIPRENDI</button>
+            <button onclick="location.reload()">MENU PRINCIPALE</button>
+            <button onclick="window.close()">ESCI DAL GIOCO</button>
+        </div>
+    </div>
+    <div id="grimoire-screen" class="hidden">
+        <div class="chest-popup-box" style="max-width: 80%; max-height: 85vh; display: flex; flex-direction: column;">
+            <h2 id="chest-title">Grimorio degli Oggetti</h2>
+
+            <div style="overflow-y: auto; padding-right: 15px; flex-grow: 1; text-align: left;">
+
+                <h3 style="color: #4b2d1f; border-bottom: 2px solid #4b2d1f; margin-bottom: 5px;">Armi</h3>
+                <div id="grimoire-grid-armi" class="griglia-grimorio" style="justify-content: flex-start;"></div>
+
+                <h3 style="color: #4b2d1f; border-bottom: 2px solid #4b2d1f; margin-bottom: 5px; margin-top: 20px;">
+                    Armature</h3>
+                <div id="grimoire-grid-armature" class="griglia-grimorio" style="justify-content: flex-start;"></div>
+
+                <h3 style="color: #4b2d1f; border-bottom: 2px solid #4b2d1f; margin-bottom: 5px; margin-top: 20px;">
+                    Consumabili</h3>
+                <div id="grimoire-grid-consumabili" class="griglia-grimorio" style="justify-content: flex-start;"></div>
+
+                <h3 style="color: #4b2d1f; border-bottom: 2px solid #4b2d1f; margin-bottom: 5px; margin-top: 20px;">
+                    Passivi</h3>
+                <div id="grimoire-grid-passivi" class="griglia-grimorio" style="justify-content: flex-start;"></div>
+
+            </div>
+
+            <div style="margin-top: 20px; text-align: center;">
+                <button class="btn-continua" onclick="chiudiGrimorio()">Chiudi Grimorio</button>
+            </div>
+        </div>
+    </div>
+    <div id="item-description" class="description-box hidden">
+        <h3 id="desc-name">Nome Item</h3>
+        <p id="desc-text">Descrizione dell'effetto...</p>
+    </div>
+    <script src="renderer.js"></script>
+</body>
+
 </html>

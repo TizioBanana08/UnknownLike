@@ -2,26 +2,26 @@ const aspetta = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const db = require('./database.js');
 console.log("Dati caricati dal database:", db);
 var turnCounter = 1;
-var stageCounter=1;
-var worldCounter=1;
+var stageCounter = 1;
+var worldCounter = 1;
 let giocoInPausa = false;
 let ultimoTurnoSpeciale = 0;
 const STAGE_PER_MONDO = 4;
-const databaseCure=db.consumabili;
+const databaseCure = db.consumabili;
 // --- GESTIONE MENU E SCELTA ARMI ---
 
 function startGame() {
     const menu = document.getElementById("main-menu");
     menu.style.opacity = "0";
 
-        menu.classList.add("hidden");
-        
-        // Chiamiamo la funzione che pesca le armi (ora definita sotto)
-        preparaSceltaStarter(); 
-        
-        const weaponScreen = document.getElementById("weapon-selection-screen");
-        weaponScreen.classList.remove("hidden");
-        weaponScreen.classList.add("visible");
+    menu.classList.add("hidden");
+
+    // Chiamiamo la funzione che pesca le armi (ora definita sotto)
+    preparaSceltaStarter();
+
+    const weaponScreen = document.getElementById("weapon-selection-screen");
+    weaponScreen.classList.remove("hidden");
+    weaponScreen.classList.add("visible");
 
 }
 
@@ -32,7 +32,7 @@ function preparaSceltaStarter() {
 
     let scelte = [];
     let copiaComuni = [...armiComuni];
-    
+
     for (let i = 0; i < 3; i++) {
         if (copiaComuni.length > 0) {
             let indice = Math.floor(Math.random() * copiaComuni.length);
@@ -41,7 +41,7 @@ function preparaSceltaStarter() {
     }
 
     const container = document.querySelector(".weapons-container");
-    container.innerHTML = ""; 
+    container.innerHTML = "";
 
     scelte.forEach(chiave => {
         const arma = db.armi[chiave];
@@ -55,37 +55,43 @@ function preparaSceltaStarter() {
         `;
     });
 }
-function displayInfoTurn(){
-    const container=document.getElementById("count");
+function displayInfoTurn() {
+    const container = document.getElementById("count");
     if (!container) return;
-    container.innerHTML=`<div class="info-container">
+    container.innerHTML = `<div class="info-container">
                             <p>Turno: ${turnCounter} | Stage: ${stageCounter} | Mondo: ${worldCounter}</p>
                         </div>`
 }
 function selezionaStarter(chiaveArma) {
-    console.log("Arma scelta:", chiaveArma);
-    giocatore.arma = db.armi[chiaveArma];
+    // 1. Recuperiamo l'oggetto arma dal DB usando la chiave (es: db.armi['spada'])
+    const armaScelta = db.armi[chiaveArma];
 
+    if (armaScelta) {
+        // 2. Ora possiamo sbloccare il nome corretto (es: "Spada Corta")
+        sbloccaNelGrimorio(armaScelta.nome);
+        console.log("Sbloccata nel Grimorio:", armaScelta.nome);
+        
+        // 3. Assegniamo l'arma al giocatore
+        giocatore.arma = armaScelta;
+    } else {
+        console.error("🚨 Errore: Arma non trovata nel DB per la chiave:", chiaveArma);
+    }
+
+    // --- Resto del tuo codice (nascondi menu, mostra gioco...) ---
     const weaponScreen = document.getElementById("weapon-selection-screen");
     const mainContainer = document.getElementById("main-container");
     const mainMenu = document.getElementById("main-menu");
 
-    // Nascondi i menu
     if (weaponScreen) {
         weaponScreen.classList.add("hidden");
         weaponScreen.style.setProperty("display", "none", "important");
     }
     if (mainMenu) mainMenu.style.display = "none";
 
-    // MOSTRA IL GIOCO
     if (mainContainer) {
         mainContainer.classList.remove("hidden");
         mainContainer.classList.add("active");
-        
-        // Forza il display via JS per sicurezza massima
         mainContainer.style.setProperty("display", "flex", "important");
-        
-        console.log("Gioco mostrato correttamente");
     }
 
     aggiornaUI();
@@ -109,14 +115,14 @@ if (typeof giocatore.armatura === 'string') {
 }
 
 // Oggetto nemico
-function generaNemico(){
+function generaNemico() {
     const chiaviNemici = Object.keys(db.nemici);
     const chiaveCasuale = chiaviNemici[Math.floor(Math.random() * chiaviNemici.length)];
-    const datiNemico = {...db.nemici[chiaveCasuale]};
+    const datiNemico = { ...db.nemici[chiaveCasuale] };
     datiNemico.maxHp = datiNemico.hp;
     return datiNemico;
 }
-var nemico = generaNemico(); 
+var nemico = generaNemico();
 
 // --- INTERFACCIA (UI) ---
 
@@ -128,19 +134,19 @@ function aggiornaUI() {
     }
 
     try {
-        
+
 
         document.getElementById("p-sprite-img").src = giocatore.sprite;
         document.getElementById("e-sprite-img").src = nemico.sprite;
         document.getElementById("weapon-sprite-img").src = giocatore.arma.sprite;
-        if(giocatore.armatura===null){
-            document.getElementById("armor-sprite-img").src="assets/other/no_item.png";
+        if (giocatore.armatura === null) {
+            document.getElementById("armor-sprite-img").src = "assets/other/no_item.png";
         }
-        else{
-            document.getElementById("armor-sprite-img").src=giocatore.armatura.sprite;
+        else {
+            document.getElementById("armor-sprite-img").src = giocatore.armatura.sprite;
         }
-         
-        
+
+
         document.getElementById("p-hp").innerText = giocatore.hp;
         document.getElementById("e-hp").innerText = nemico.hp;
         document.getElementById("p-name").innerText = giocatore.nome;
@@ -148,23 +154,23 @@ function aggiornaUI() {
         document.getElementById("p-weapon").innerText = giocatore.arma.nome;
         document.getElementById("e-atk").innerText = nemico.attacco;
 
-        cambiaColoreHealthBar(giocatore.hp,giocatore.maxHp, "p-health-bar");
-        cambiaColoreHealthBar(nemico.hp,nemico.maxHp, "e-health-bar");
+        cambiaColoreHealthBar(giocatore.hp, giocatore.maxHp, "p-health-bar");
+        cambiaColoreHealthBar(nemico.hp, nemico.maxHp, "e-health-bar");
         displayInfoTurn();
         const btnSpeciale = document.getElementById("special-atk-button");
         if (btnSpeciale && giocatore && giocatore.arma) {
             let turniPassati = turnCounter - ultimoTurnoSpeciale;
             let hasAbilita = typeof giocatore.arma.abilita_attiva === "function";
 
-        // Se l'arma ha un'abilità E sono passati almeno 5 turni
+            // Se l'arma ha un'abilità E sono passati almeno 5 turni
             if (hasAbilita && turniPassati >= 5) {
                 btnSpeciale.classList.add("special-ready");
-    
+
             } else {
                 btnSpeciale.classList.remove("special-ready");
-        
-            }   
-    }
+
+            }
+        }
     } catch (error) {
         console.error("Errore durante l'aggiornamento della UI:", error);
     }
@@ -176,7 +182,7 @@ function cambiaColoreHealthBar(vitaAttuale, vitaMassima, id) {
 
     // 1. Calcoliamo la vera percentuale (da 0 a 100)
     var percentuale = (vitaAttuale / vitaMassima) * 100;
-    
+
     // 2. Limiti di sicurezza (evita che vada sotto lo 0% o sopra il 100%)
     if (percentuale < 0) percentuale = 0;
     if (percentuale > 100) percentuale = 100;
@@ -202,7 +208,7 @@ function cambiaColoreHealthBar(vitaAttuale, vitaMassima, id) {
 async function attaccoGiocatore() {
     // 1. Controllo di sicurezza
     if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0 || giocoInPausa || gameState.animazioneInCorso) return;
-    
+
     gameState.animazioneInCorso = true; // 🔒 CHIUDIAMO IL LUCCHETTO
 
     try {
@@ -228,7 +234,7 @@ async function attaccoGiocatore() {
 
         giocatore.passivi.forEach(idPassivo => {
             const oggetto = db.passivi[idPassivo];
-            
+
             if (oggetto) {
                 // Cura
                 if (oggetto.tipoEffetto === "cura_inizio_turno") {
@@ -253,7 +259,7 @@ async function attaccoGiocatore() {
         // Infliggiamo il danno al nemico
         nemico.hp -= dannoTurno;
         if (nemico.hp < 0) nemico.hp = 0;
-        
+
         aggiornaUI();
 
         // Log e contatori
@@ -269,7 +275,7 @@ async function attaccoGiocatore() {
         if (giocatore.arma.tipo) {
             nemico.stato = setStatus(giocatore.arma.tipo);
         }
-        
+
         // Danni da stato sul giocatore
         if (giocatore.stato) {
             let danniStato = checkStatus(giocatore.stato);
@@ -284,17 +290,17 @@ async function attaccoGiocatore() {
         if (nemico.hp > 0) {
             gameState.fase = "TURNO_NEMICO";
             await aspetta(1500);
-            await turnoNemico(); 
+            await turnoNemico();
         } else {
             gameState.fase = "VITTORIA";
             aggiungiLog("🏆 Il nemico è stato sconfitto!");
-            await avanzaAlProssimoStage(); 
+            await avanzaAlProssimoStage();
         }
 
     } catch (errore) {
         // 🚨 SBLOCCO DI EMERGENZA
         console.error("Errore critico durante l'attacco:", errore);
-        gameState.animazioneInCorso = false; 
+        gameState.animazioneInCorso = false;
         gameState.fase = "TURNO_GIOCATORE";
         aggiungiLog("❌ Errore interno, ma i tasti sono stati sbloccati.");
     }
@@ -302,22 +308,22 @@ async function attaccoGiocatore() {
 
 async function attaccoSpeciale() {
     if (gameState.fase !== "TURNO_GIOCATORE" || nemico.hp <= 0 || giocoInPausa || gameState.animazioneInCorso) return;
-    
+
     if (typeof giocatore.arma.abilita_attiva !== "function") {
         aggiungiLog(`❌ La tua arma (${giocatore.arma.nome}) non ha un'abilità speciale!`);
-        return; 
+        return;
     }
-    
+
     gameState.animazioneInCorso = true; // 🔒
 
     try {
         let dannoTurno = 0;
         let turniPassati = turnCounter - ultimoTurnoSpeciale;
-        
+
         // Calcola il danno base prima dei modificatori
         if (turniPassati >= 5) {
             dannoTurno = giocatore.arma.abilita_attiva();
-            ultimoTurnoSpeciale = turnCounter; 
+            ultimoTurnoSpeciale = turnCounter;
             aggiungiLog(`✨ Attacco speciale attivato!`);
         } else {
             let turniMancanti = 5 - turniPassati;
@@ -331,7 +337,7 @@ async function attaccoSpeciale() {
 
         giocatore.passivi.forEach(idPassivo => {
             const oggetto = db.passivi[idPassivo]; // Recupera dal database usando la chiave
-            
+
             if (oggetto) {
                 // Cura
                 if (oggetto.tipoEffetto === "cura_inizio_turno") {
@@ -352,13 +358,13 @@ async function attaccoSpeciale() {
         // Applichiamo i bonus passivi al danno finale dell'attacco speciale
         dannoTurno = Math.floor((dannoTurno + dannoBonusFisso) * moltiplicatore);
         // --- FINE SISTEMA PASSIVI ---
-        
+
         nemico.hp -= dannoTurno;
         if (nemico.hp < 0) nemico.hp = 0;
         aggiungiLog(`⚔️ ${giocatore.nome} usa ${giocatore.arma.nome} e toglie ${dannoTurno} HP!`);
         turnCounter += 1;
         aggiornaUI();
-        
+
         if (nemico.hp > 0) {
             gameState.fase = "TURNO_NEMICO";
             await aspetta(1500);
@@ -371,7 +377,7 @@ async function attaccoSpeciale() {
 
     } catch (errore) {
         console.error("Errore critico durante l'attacco speciale:", errore);
-        gameState.animazioneInCorso = false; 
+        gameState.animazioneInCorso = false;
         gameState.fase = "TURNO_GIOCATORE";
         aggiungiLog("❌ Errore interno, ma i tasti sono stati sbloccati.");
     }
@@ -386,10 +392,10 @@ async function turnoNemico() {
     if (dannoDaStato > 0) {
         nemico.hp -= dannoDaStato;
         if (nemico.hp < 0) nemico.hp = 0;
-        
+
         aggiornaUI();
         await aspetta(1000); // Diamo tempo al giocatore di leggere il log
-        
+
         // IL FIX CRUCIALE: Controlliamo SE È MORTO per via dello stato
         if (nemico.hp <= 0) {
             gameState.fase = "VITTORIA";
@@ -399,7 +405,7 @@ async function turnoNemico() {
             return; // IMPORTANTE: questo blocca l'esecuzione del resto del turno nemico!
         }
     }
-    
+
     aggiungiLog(`🎲 ${nemico.nome} si prepara ad attaccare...`);
     await aspetta(1200);
 
@@ -407,20 +413,20 @@ async function turnoNemico() {
         await aspetta(200);
     }
     let dannoTurnoNemico = nemico.attacco;
-    if(giocatore.armatura!==null){      
+    if (giocatore.armatura !== null) {
         dannoTurnoNemico -= giocatore.armatura.difesa;
     }
-    
-    
-    if (giocatore.armatura!==null && typeof giocatore.armatura.abilita_passiva === "function") {
+
+
+    if (giocatore.armatura !== null && typeof giocatore.armatura.abilita_passiva === "function") {
         dannoTurnoNemico -= giocatore.armatura.abilita_passiva();
     }
-    
-    if(dannoTurnoNemico < 0) dannoTurnoNemico = 0;
-    
+
+    if (dannoTurnoNemico < 0) dannoTurnoNemico = 0;
+
     giocatore.hp -= dannoTurnoNemico;
     if (giocatore.hp < 0) giocatore.hp = 0;
-    
+
     aggiornaUI();
     aggiungiLog(`💥 ${nemico.nome} ti colpisce per ${dannoTurnoNemico} danni!`);
     aggiornaUI();
@@ -443,7 +449,7 @@ async function turnoNemico() {
 
 // --- GESTIONE SCHERMATE E MENU ---
 
-function mostraGameOver(){
+function mostraGameOver() {
     const screen = document.getElementById("game-over-screen");
     screen.classList.remove("hidden");
 }
@@ -468,7 +474,7 @@ function restartGame() {
 
     // 4. Puliamo il log della battaglia
     const log = document.getElementById("battle-log");
-    if (log) log.innerHTML = ""; 
+    if (log) log.innerHTML = "";
 
     // 5. Gestione delle schermate UI
     const gameOverScreen = document.getElementById("game-over-screen");
@@ -490,11 +496,11 @@ function restartGame() {
         weaponScreen.classList.remove("hidden");
         weaponScreen.classList.add("visible");
         // Se nel tuo CSS usi display: flex per centrare le carte, mettilo qui:
-        weaponScreen.style.setProperty("display", "flex", "important"); 
+        weaponScreen.style.setProperty("display", "flex", "important");
     }
 }
 
-function quitGame(){
+function quitGame() {
     window.close();
 }
 
@@ -502,10 +508,10 @@ function aggiungiLog(messaggio) {
     const log = document.getElementById("battle-log");
     const li = document.createElement("li");
     li.innerText = messaggio;
-    
+
     // Aggiunge in fondo alla lista
     log.appendChild(li);
-    
+
     // Autoscroll verso il basso per vedere l'ultimo messaggio
     log.scrollTop = log.scrollHeight;
 }
@@ -514,7 +520,7 @@ function toggleOptions() {
     if (gameState.animazioneInCorso && !giocoInPausa) {
         // Se l'animazione è in corso ma NON è per via della pausa, 
         // significa che c'è un baule o un attacco: blocca tutto.
-        return; 
+        return;
     }
     const menu = document.getElementById("options-menu");
     if (!menu) {
@@ -538,19 +544,19 @@ function checkStatus(stato) {
     return 0; // Se ha uno stato non riconosciuto, non fa danni
 }
 
-function setStatus(tipo){
-    if(tipo==="normale"){
+function setStatus(tipo) {
+    if (tipo === "normale") {
         return null;
-    }else if(tipo==="fuoco"){
-        if(controllaSuccesso(50)){
+    } else if (tipo === "fuoco") {
+        if (controllaSuccesso(50)) {
             aggiungiLog("bruciatura applicata!");
             return "burn";
         }
-            
-        }else{
-            return null;
-        }
+
+    } else {
+        return null;
     }
+}
 
 // --- EVENT LISTENERS E DESCRITTORI OGGETTI ---
 
@@ -569,7 +575,7 @@ weaponImg.onclick = () => {
 };
 
 armorImg.onclick = () => {
-    if(giocatore.armatura===null){
+    if (giocatore.armatura === null) {
         const descName = document.getElementById("desc-name");
         const descText = document.getElementById("desc-text");
         const armatura = giocatore.armatura;
@@ -578,7 +584,7 @@ armorImg.onclick = () => {
         descText.innerText = armatura.descrizione;
         descBox.classList.toggle("hidden");
     }
-    
+
 };
 
 window.onclick = (event) => {
@@ -596,23 +602,23 @@ function controllaSuccesso(percentuale) {
     return Math.random() * 100 < percentuale;
 }
 async function avanzaAlProssimoStage() {
-    stageCounter++; 
+    stageCounter++;
     let turniCaricati = turnCounter - ultimoTurnoSpeciale;
     turnCounter = 1;
     ultimoTurnoSpeciale = 1 - turniCaricati;
-    
+
     // Controlliamo se abbiamo finito il mondo
     if (stageCounter > STAGE_PER_MONDO) {
         apriChest(); // Apre la schermata e mette animazioneInCorso = true
         return;      // 🛑 FONDAMENTALE: Ferma l'esecuzione qui! Non va oltre.
-    } 
-        
+    }
+
     // --- SE NON C'È LA CHEST (Avanzamento normale) ---
     aggiungiLog(`🚩 Avanzi allo Stage ${stageCounter}...`);
     await aspetta(1500);
 
     // Generazione nuovo nemico normale
-    nemico = generaNemico(); 
+    nemico = generaNemico();
 
     // Ripartiamo
     gameState.fase = "TURNO_GIOCATORE";
@@ -647,7 +653,7 @@ async function usaDalInventario(index) {
     }
 
     aggiungiLog(`🧪 Hai usato ${datiOggetto.nome}! +${datiOggetto.valore} HP.`);
-    
+
     aggiornaUI();
     // Il tasto cura ora chiude anche il menu inventario se lo hai aperto
     // toggleInventario(); 
@@ -665,7 +671,7 @@ function cura() {
 
 function toggleZaino() {
     const screen = document.getElementById("inventory-screen");
-    if ( gameState.animazioneInCorso) return;
+    if (gameState.animazioneInCorso) return;
     screen.classList.toggle("visible"); // Uso .visible come nel tuo CSS per la scelta armi
 
     if (screen.classList.contains("visible")) {
@@ -676,13 +682,13 @@ function toggleZaino() {
 function mostraOggettiZaino() {
     const container = document.getElementById("inventory-list");
     console.log("Tentativo di mostrare lo zaino..."); // LOG 1
-    
+
     if (!container) {
         console.error("ERRORE: Non trovo l'elemento inventory-list nell'HTML!");
         return;
     }
 
-    container.innerHTML = ""; 
+    container.innerHTML = "";
 
     console.log("Contenuto inventario:", giocatore.inventario); // LOG 2
 
@@ -694,7 +700,7 @@ function mostraOggettiZaino() {
     giocatore.inventario.forEach((slot, index) => {
         const datiOggetto = databaseCure[slot.id];
         console.log("Sto creando la card per:", datiOggetto.nome); // LOG 3
-        
+
         container.innerHTML += `
             <div class="weapon-card">
                 <h3>${datiOggetto.nome}</h3>
@@ -736,18 +742,18 @@ async function usaCura(index) {
 
     // 3. MANTIENI IL TURNO
     await aspetta(500); // Piccola pausa giusto per far leggere il messaggio a schermo
-    
+
     // Riapriamo il lucchetto! La fase è ancora "TURNO_GIOCATORE", quindi ora puoi cliccare "Attacca"
-    gameState.animazioneInCorso = false; 
+    gameState.animazioneInCorso = false;
 }
 function calcolaDanno() {
     let dannoBase = giocatore.arma.danno;
-    
+
     const boost = giocatore.passivi.find(p => p.effetto === "boost_atk");
     if (boost) {
         dannoBase *= boost.valore; // Moltiplica per 1.2
     }
-    
+
     return Math.floor(dannoBase);
 }
 function apriChest() {
@@ -764,51 +770,51 @@ function apriChest() {
     // Peschiamo dal database
     const arrayArmature = Object.values(db.armature || {});
     const chiaviPassivi = Object.keys(db.passivi || {});
-    const chiaviCure = Object.keys(db.consumabili || {}); 
+    const chiaviCure = Object.keys(db.consumabili || {});
 
     // 1. Logica Armatura
     if (r < 0.3 && arrayArmature.length > 0) {
-    const raritaAttuale = giocatore.armatura ? giocatore.armatura.rarita : 0;
-    
-    // Prendiamo armature di rarità uguale o superiore
-    const armaturePossibili = arrayArmature.filter(a => a.rarita >= raritaAttuale);
-    
-    if (armaturePossibili.length > 0) {
-        oggettoTrovato = armaturePossibili[Math.floor(Math.random() * armaturePossibili.length)];
-        
-        // Se peschiamo esattamente l'armatura che abbiamo già addosso, annulliamo
-        if (giocatore.armatura && oggettoTrovato.nome === giocatore.armatura.nome) {
-            oggettoTrovato = null;
-        } else {
-            // Se è migliore o se non abbiamo nessuna armatura
-            if (oggettoTrovato.rarita > raritaAttuale || !giocatore.armatura) {
-                giocatore.armatura = oggettoTrovato;
-                aggiungiLog(`🛡️ Hai equipaggiato automaticamente: ${oggettoTrovato.nome}!`);
-            } 
-            // Se è della stessa rarità
-            else if (oggettoTrovato.rarita === raritaAttuale) {
-                aggiungiLog(`⚖️ Hai trovato ${oggettoTrovato.nome}. Scegli cosa fare!`);
-                
-                // Mostriamo i pulsanti di scelta (che creeremo nell'HTML)
-                if (sceltaContainer) {
-                    sceltaContainer.style.display = "block";
-                    document.getElementById("armatura-attuale-nome").innerText = giocatore.armatura.nome;
+        const raritaAttuale = giocatore.armatura ? giocatore.armatura.rarita : 0;
+
+        // Prendiamo armature di rarità uguale o superiore
+        const armaturePossibili = arrayArmature.filter(a => a.rarita >= raritaAttuale);
+
+        if (armaturePossibili.length > 0) {
+            oggettoTrovato = armaturePossibili[Math.floor(Math.random() * armaturePossibili.length)];
+
+            // Se peschiamo esattamente l'armatura che abbiamo già addosso, annulliamo
+            if (giocatore.armatura && oggettoTrovato.nome === giocatore.armatura.nome) {
+                oggettoTrovato = null;
+            } else {
+                // Se è migliore o se non abbiamo nessuna armatura
+                if (oggettoTrovato.rarita > raritaAttuale || !giocatore.armatura) {
+                    giocatore.armatura = oggettoTrovato;
+                    aggiungiLog(`🛡️ Hai equipaggiato automaticamente: ${oggettoTrovato.nome}!`);
                 }
-                
-                // Salviamo l'armatura in una variabile globale temporanea per poterla equipaggiare dopo
-                window.armaturaInAttesa = oggettoTrovato; 
+                // Se è della stessa rarità
+                else if (oggettoTrovato.rarita === raritaAttuale) {
+                    aggiungiLog(`⚖️ Hai trovato ${oggettoTrovato.nome}. Scegli cosa fare!`);
+
+                    // Mostriamo i pulsanti di scelta (che creeremo nell'HTML)
+                    if (sceltaContainer) {
+                        sceltaContainer.style.display = "block";
+                        document.getElementById("armatura-attuale-nome").innerText = giocatore.armatura.nome;
+                    }
+
+                    // Salviamo l'armatura in una variabile globale temporanea per poterla equipaggiare dopo
+                    window.armaturaInAttesa = oggettoTrovato;
+                }
             }
         }
     }
-}
-    
+
     // 2. Logica Passivi
     if (!oggettoTrovato && r < 0.6 && chiaviPassivi.length > 0) {
         const chiaviDisponibili = chiaviPassivi.filter(chiave => !giocatore.passivi.includes(chiave));
-        
+
         if (chiaviDisponibili.length > 0) {
             const chiaveScelta = chiaviDisponibili[Math.floor(Math.random() * chiaviDisponibili.length)];
-            giocatore.passivi.push(chiaveScelta); 
+            giocatore.passivi.push(chiaveScelta);
             oggettoTrovato = db.passivi[chiaveScelta];
             aggiungiLog(`💍 Nuovo passivo ottenuto: ${oggettoTrovato.nome}!`);
         }
@@ -829,6 +835,7 @@ function apriChest() {
     }
 
     if (oggettoTrovato) {
+        sbloccaNelGrimorio(oggettoTrovato.nome);
         lootName.innerText = oggettoTrovato.nome;
         lootDesc.innerText = oggettoTrovato.desc || "Un oggetto misterioso...";
 
@@ -860,21 +867,21 @@ function aggiungiAInventario(idOggetto) {
 async function prossimoLivello() {
     // 1. Chiudiamo la schermata
     document.getElementById("chest-screen").classList.remove("visible");
-    
+
     // 2. Ora avanziamo di mondo (dopo aver preso l'oggetto)
     worldCounter++;
-    stageCounter = 1; 
+    stageCounter = 1;
     aggiungiLog(`🌍 BENVENUTO NEL MONDO ${worldCounter}! 🌍`);
-    
+
     await aspetta(1000); // Piccola pausa scenica
-    
+
     // 3. Generiamo il primo nemico del nuovo mondo
-    nemico = generaNemico(); 
-    
+    nemico = generaNemico();
+
     // 4. Sblocchiamo il gioco
     gameState.fase = "TURNO_GIOCATORE";
     gameState.animazioneInCorso = false; // 🔓 Tasti finalmente sbloccati
-    
+
     aggiornaUI();
     aggiungiLog(`⚠️ Un nuovo nemico appare: ${nemico.nome}! È il tuo turno.`);
 }
@@ -888,12 +895,113 @@ function confermaScambioArmatura(vuoiScambiare) {
 
     // Nascondiamo i pulsanti di scelta
     document.getElementById("scelta-armatura-container").style.display = "none";
-    
+
     // Svuotiamo la variabile temporanea
     window.armaturaInAttesa = null;
 
     // Aggiorniamo le statistiche a schermo
     aggiornaUI();
+}
+function sbloccaNelGrimorio(nomeOggetto) {
+    let scoperti = JSON.parse(localStorage.getItem("oggettiScoperti")) || [];
+    
+    if (!scoperti.includes(nomeOggetto)) {
+        scoperti.push(nomeOggetto);
+        localStorage.setItem("oggettiScoperti", JSON.stringify(scoperti));
+        console.log("Sbloccato nel Grimorio: " + nomeOggetto);
+    }
+}
+function apriGrimorio() {
+    try {
+        const screen = document.getElementById("grimoire-screen");
+        let scoperti = JSON.parse(localStorage.getItem("oggettiScoperti")) || [];
+
+        function popolaSezione(oggettiDalDb, idDellaGriglia) {
+            const grid = document.getElementById(idDellaGriglia);
+
+            if (!grid) {
+                console.error("🚨 Errore: Non trovo la griglia con ID:", idDellaGriglia);
+                return;
+            }
+
+            grid.innerHTML = "";
+
+            if (!oggettiDalDb || Object.keys(oggettiDalDb).length === 0) {
+                console.warn("⚠️ Attenzione: Nessun dato trovato per la sezione:", idDellaGriglia);
+                return;
+            }
+
+            Object.values(oggettiDalDb).forEach(oggetto => {
+                const slot = document.createElement("div");
+                slot.classList.add("slot-grimorio");
+
+                let nomeDaMostrare = "";
+                let descDaMostrare = "";
+
+                // Logica di controllo scoperta (già funzionante)
+                if (scoperti.includes(oggetto.nome)) {
+                    nomeDaMostrare = oggetto.nome;
+                    descDaMostrare = oggetto.descrizione || "Un oggetto formidabile.";
+                    if (oggetto.sprite) {
+                        const img = document.createElement("img");
+                        img.src = oggetto.sprite;
+                        slot.appendChild(img);
+                    } else {
+                        slot.innerText = "✓";
+                    }
+                } else {
+                    const imgX = document.createElement("img");
+                    imgX.src = "assets/other/no_item.png";
+                    imgX.classList.add("x-sprite");
+                    slot.appendChild(imgX);
+                    slot.classList.add("non-scoperto");
+                    nomeDaMostrare = "Oggetto Sconosciuto";
+                    descDaMostrare = "Continua a giocare per scoprire questo segreto...";
+                }
+
+                // --- MECCANICA IDENTICA ALL'INVENTARIO ---
+
+                slot.onclick = (e) => {
+                    // 🛑 Fondamentale: impedisce al click di arrivare allo sfondo
+                    e.stopPropagation();
+
+                    const descBox = document.getElementById("item-description");
+                    const nameLabel = document.getElementById("desc-name");
+                    const textLabel = document.getElementById("desc-text");
+
+                    nameLabel.innerText = nomeDaMostrare;
+                    textLabel.innerText = descDaMostrare;
+
+                    // Mostriamo la box
+                    descBox.classList.remove("hidden");
+                };
+
+                grid.appendChild(slot);
+            });
+        }
+
+        // Chiamate alle sezioni
+        popolaSezione(db.armi, "grimoire-grid-armi");
+        popolaSezione(db.armature, "grimoire-grid-armature");
+        popolaSezione(db.consumabili, "grimoire-grid-consumabili");
+        popolaSezione(db.passivi, "grimoire-grid-passivi");
+
+        screen.classList.remove("hidden");
+        screen.classList.add("visible");
+
+    } catch (errore) {
+        console.error("🚨 ERRORE NEL GRIMORIO:", errore);
+    }
+}
+
+function chiudiGrimorio() {
+    const screen = document.getElementById("grimoire-screen");
+
+    // Togliamo la classe che lo fa vedere
+    screen.classList.remove("visible");
+
+    // Rimettiamo la classe che lo nasconde (senza cancellarlo!)
+    screen.classList.add("hidden");
 }
 // Inizializza la UI all'avvio
 aggiornaUI();
