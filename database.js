@@ -139,7 +139,7 @@ const database={
         armaturaAngelica:{
             nome:"Armatura Angelica",
             difesa:15,
-            sprite:"assets/armors/angelicArmor.png",
+            sprite:"assets/armors/angelic_armor.png",
             descrizione:"armatura creata dagli angeli, chiunque la indossi sarà benedetto in ogni battaglia",
             //Ogni turno cura il giocatore di 5 hp
             abilita_passiva(){
