@@ -102,10 +102,6 @@ let gameState = {
 // Oggetto Player
 const giocatore = db.personaggi.cavaliere;
 giocatore.arma = null;
-giocatore.inventario = [
-    { id: "pozione_base", quantita: 2 },
-    { id: "pane", quantita: 5 }
-];
 if (typeof giocatore.armatura === 'string') {
     giocatore.armatura = db.armature[giocatore.armatura];
     giocatore.maxHp = giocatore.maxHp + giocatore.armatura.difesa;
