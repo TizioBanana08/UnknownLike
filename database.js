@@ -121,7 +121,7 @@ const database={
         armaturaFerro:{
             nome:"Armatura di ferro",
             difesa:10,
-            sprite:"assets/armors/ironArmor.png",
+            sprite:"assets/armors/iron_armor.png",
             descrizione:"Una solida e pesante armatura in ferro, una garanzia per eludere i colpi nemici!",
             //L'armatura ha la possibilità del 20% di aumentare la difesa di 5 punti per un turno
             abilita_passiva(){
