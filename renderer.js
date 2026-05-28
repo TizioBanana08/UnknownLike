@@ -669,7 +669,7 @@ function cura() {
 
 function toggleZaino() {
     const screen = document.getElementById("inventory-screen");
-    if (screen.classList.contains("visible") || gameState.animazioneInCorso) return;
+    if ( gameState.animazioneInCorso) return;
     screen.classList.toggle("visible"); // Uso .visible come nel tuo CSS per la scelta armi
 
     if (screen.classList.contains("visible")) {
