@@ -28,7 +28,7 @@ function startGame() {
 // Questa è la funzione che mancava o aveva il nome sbagliato
 function preparaSceltaStarter() {
     const tutteLeChiavi = Object.keys(db.armi);
-    const armiComuni = tutteLeChiavi.filter(chiave => db.armi[chiave].rarita === "comune");
+    const armiComuni = tutteLeChiavi.filter(chiave => db.armi[chiave].rarita === 0);
 
     let scelte = [];
     let copiaComuni = [...armiComuni];
@@ -759,6 +759,8 @@ function apriChest() {
     const lootName = document.getElementById("loot-name");
     const lootDesc = document.getElementById("loot-desc");
     const lootImg = document.getElementById("loot-img");
+    const sceltaContainer = document.getElementById("scelta-armatura-container");
+    if (sceltaContainer) sceltaContainer.style.display = "none";
 
     let oggettoTrovato = null;
     const r = Math.random();
@@ -770,15 +772,39 @@ function apriChest() {
 
     // 1. Logica Armatura
     if (r < 0.3 && arrayArmature.length > 0) {
-        const raritaAttuale = giocatore.armatura ? giocatore.armatura.rarita : 0;
-        const armaturePossibili = arrayArmature.filter(a => a.rarita > raritaAttuale);
+    const raritaAttuale = giocatore.armatura ? giocatore.armatura.rarita : 0;
+    
+    // Prendiamo armature di rarità uguale o superiore
+    const armaturePossibili = arrayArmature.filter(a => a.rarita >= raritaAttuale);
+    
+    if (armaturePossibili.length > 0) {
+        oggettoTrovato = armaturePossibili[Math.floor(Math.random() * armaturePossibili.length)];
         
-        if (armaturePossibili.length > 0) {
-            oggettoTrovato = armaturePossibili[0];
-            giocatore.armatura = oggettoTrovato;
-            aggiungiLog(`🛡️ Hai equipaggiato: ${oggettoTrovato.nome}!`);
+        // Se peschiamo esattamente l'armatura che abbiamo già addosso, annulliamo
+        if (giocatore.armatura && oggettoTrovato.nome === giocatore.armatura.nome) {
+            oggettoTrovato = null;
+        } else {
+            // Se è migliore o se non abbiamo nessuna armatura
+            if (oggettoTrovato.rarita > raritaAttuale || !giocatore.armatura) {
+                giocatore.armatura = oggettoTrovato;
+                aggiungiLog(`🛡️ Hai equipaggiato automaticamente: ${oggettoTrovato.nome}!`);
+            } 
+            // Se è della stessa rarità
+            else if (oggettoTrovato.rarita === raritaAttuale) {
+                aggiungiLog(`⚖️ Hai trovato ${oggettoTrovato.nome}. Scegli cosa fare!`);
+                
+                // Mostriamo i pulsanti di scelta (che creeremo nell'HTML)
+                if (sceltaContainer) {
+                    sceltaContainer.style.display = "block";
+                    document.getElementById("armatura-attuale-nome").innerText = giocatore.armatura.nome;
+                }
+                
+                // Salviamo l'armatura in una variabile globale temporanea per poterla equipaggiare dopo
+                window.armaturaInAttesa = oggettoTrovato; 
+            }
         }
-    } 
+    }
+}
     
     // 2. Logica Passivi
     if (!oggettoTrovato && r < 0.6 && chiaviPassivi.length > 0) {
@@ -855,6 +881,23 @@ async function prossimoLivello() {
     
     aggiornaUI();
     aggiungiLog(`⚠️ Un nuovo nemico appare: ${nemico.nome}! È il tuo turno.`);
+}
+function confermaScambioArmatura(vuoiScambiare) {
+    if (vuoiScambiare && window.armaturaInAttesa) {
+        giocatore.armatura = window.armaturaInAttesa;
+        aggiungiLog(`🔄 Hai equipaggiato la nuova armatura: ${window.armaturaInAttesa.nome}!`);
+    } else {
+        aggiungiLog(`❌ Hai smantellato la nuova armatura e tenuto la tua.`);
+    }
+
+    // Nascondiamo i pulsanti di scelta
+    document.getElementById("scelta-armatura-container").style.display = "none";
+    
+    // Svuotiamo la variabile temporanea
+    window.armaturaInAttesa = null;
+
+    // Aggiorniamo le statistiche a schermo
+    aggiornaUI();
 }
 // Inizializza la UI all'avvio
 aggiornaUI();

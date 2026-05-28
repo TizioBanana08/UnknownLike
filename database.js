@@ -6,7 +6,7 @@ const database={
             nome: "Spada",
             atk:15,
             sprite:"assets/weapons/sword.png",
-            rarita:"comune",
+            rarita:0,
             tipo:"normale",
             //abilità passiva bleed:ogni attacco aggiungerà 1 di danno 
             abilita_passiva(){
@@ -19,7 +19,7 @@ const database={
         },
         //Oggetto arco base
         arco:{
-            nome: "Arco",
+            nome: 0,
             atk:5,
             sprite:"assets/weapons/bow.png",
             rarita:"comune",
@@ -38,7 +38,7 @@ const database={
             nome: "Ascia",
             atk:15,
             sprite:"assets/weapons/axe.png",
-            rarita:"comune",
+            rarita:0,
             tipo:"normale",
 
             //abilità passiva crit chance: ogni attacco ha una possibiltà del 20% di infliggere il doppio del danno
@@ -58,7 +58,7 @@ const database={
             nome: "Tirapugni",
             atk:10,
             sprite:"assets/weapons/brass_knuckles.png",
-            rarita:"comune",
+            rarita:0,
             tipo:"normale",
             //abilità passiva doppio colpo: ogni attacco colpisci due volte
             abilita_passiva(){
@@ -71,7 +71,7 @@ const database={
             nome:"Lancia",
             atk:15,
             sprite:"assets/weapons/spear.png",
-            rarita:"comune",
+            rarita:0,
             tipo:"normale",
             //abilità passiva doppio affondo: ogni attacco ha una possibilità del 20% di fare un secondo attacco al nemico che infligge 5 danni in più 
             abilita_passiva(){
@@ -92,7 +92,7 @@ const database={
             descrizione:"Una spada forgiata nelle fiamme dell'inferno pronta incenerire i tuoi nemici!",
             sprite:"assets/weapons/flame_sword",
             tipo:"fuoco",
-            rarita:"comune",
+            rarita:2,
             abilita_passiva(){
                 return danno_aggiuntivo=this.atk+1;
             },
@@ -111,6 +111,7 @@ const database={
             nome:"Armatura di maglia",
             difesa:5,
             sprite:"assets/armors/chainmail.png",
+            rarita:0,
             descrizione:"Una resistente armatura in cotta di maglia, con lei non si sbaglia mai!",
             //l'armatura base non aggiunge nessuna abilità passiva (per questione di codice però ne inserisco una vuota per evitare errori)
             abilita_passiva(){
@@ -122,6 +123,7 @@ const database={
             nome:"Armatura di ferro",
             difesa:10,
             sprite:"assets/armors/iron_armor.png",
+            rarita:1,
             descrizione:"Una solida e pesante armatura in ferro, una garanzia per eludere i colpi nemici!",
             //L'armatura ha la possibilità del 20% di aumentare la difesa di 5 punti per un turno
             abilita_passiva(){
@@ -140,6 +142,7 @@ const database={
             nome:"Armatura Angelica",
             difesa:15,
             sprite:"assets/armors/angelic_armor.png",
+            rarita:5,
             descrizione:"armatura creata dagli angeli, chiunque la indossi sarà benedetto in ogni battaglia",
             //Ogni turno cura il giocatore di 5 hp
             abilita_passiva(){
@@ -202,13 +205,13 @@ const database={
         nome: "Anello Rigenerante", 
         tipoEffetto: "cura_inizio_turno", // Categoria dell'effetto
         valore: 5,
-        sprite:""                         // Quanto cura
+        sprite:"assets/passives/heal_ring.png"                         // Quanto cura
     },
     ciondolo_forza: { 
         nome: "Ciondolo Forza", 
         tipoEffetto: "moltiplicatore_danno", 
         valore: 1.2,
-        sprite:""                       // +20%
+        sprite:"assets/passives/strength_pendant.png"                       // +20%
     },
     spada_rotta: {
         nome: "Lama Arrugginita",

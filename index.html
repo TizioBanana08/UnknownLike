@@ -48,6 +48,11 @@
             </div>
             <h2 id="loot-name">Nome Oggetto</h2>
             <p id="loot-desc">Descrizione dell'effetto...</p>
+            <div id="scelta-armatura-container" style="display: none; margin-top: 15px;">
+                <p>Hai già <strong><span id="armatura-attuale-nome"></span></strong>.</p>
+                <button onclick="confermaScambioArmatura(true)">Scambia</button>
+                <button onclick="confermaScambioArmatura(false)">Tieni la tua</button>
+            </div>
         </div>
 
         <div class="game-over-buttons">
