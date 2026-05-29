@@ -575,13 +575,20 @@ weaponImg.onclick = () => {
 };
 
 armorImg.onclick = () => {
-    if (giocatore.armatura === null) {
-        const descName = document.getElementById("desc-name");
-        const descText = document.getElementById("desc-text");
+    const descName = document.getElementById("desc-name");
+    const descText = document.getElementById("desc-text");
+    console.log(giocatore.armatura);
+    if (giocatore.armatura !== null) {
+        
         const armatura = giocatore.armatura;
-
         descName.innerText = armatura.nome;
         descText.innerText = armatura.descrizione;
+        descBox.classList.toggle("hidden");
+        
+    }
+    else{
+        descName.innerText = "Nessuna armatura equipaggiata!";
+        descText.innerText = "Continua la tua avventura per sbloccarne una";
         descBox.classList.toggle("hidden");
     }
 

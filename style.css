@@ -68,9 +68,11 @@ li {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    height: 55vh;
+    height: 60vh; /* Leggermente aumentato per dare respiro */
     width: 100%;
-    margin-top: 20px;
+    margin-top: 10px;
+    flex-shrink: 1; /* Permette alla sezione di restringersi se serve */
+    min-height: 300px; /* Impedisce il collasso totale */
 }
 
 #main-container {
@@ -94,14 +96,15 @@ li {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start; /* Allinea i contenuti dall'alto */
     background: #e6cda4;
     border: 5px solid #ad7a59;
     width: 250px;
     height: 380px;
-    padding: 20px;
+    padding: 15px;          /* Leggermente ridotto per dare spazio interno */
     border-radius: 15px;
     box-sizing: border-box;
+    gap: 8px;               /* Crea spazio automatico tra nome, barra e sprite */
 }
 
 .sprite-container {
@@ -110,6 +113,7 @@ li {
     align-items: center;
     justify-content: center;
     width: 100%;
+    min-height: 0;         /* Permette la contrazione se necessario */
 }
 
 .sprite-container img {
@@ -125,11 +129,12 @@ li {
 }
 
 .health-bar-container {
-    width: 200px;
-    height: 20px;
+    width: 100%;          /* Si adatta alla larghezza della card .entity */
+    max-width: 180px;     /* Impedisce che diventi troppo larga */
+    height: 18px;
     background-color: #444;
     border: 2px solid #222;
-    margin-bottom: 10px;
+    margin-bottom: 5px;   /* Ridotto per stare nel layout */
     overflow: hidden;
     display: block;
 }
@@ -309,7 +314,7 @@ li {
 
 .item-container p {
     margin: 2px 0 5px 0;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     color: #4a332d;
     text-transform: uppercase;
     font-weight: bold;
